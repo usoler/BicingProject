@@ -51,6 +51,17 @@ public class BicingSolution {
         this.costeTransporte = 0.0;
     }
 
+    public BicingSolution(BicingSolution solution) {
+        this.estaciones = solution.getEstaciones();
+        this.asignaciones = solution.getAsignaciones();
+        this.primerosDestinos = solution.getPrimerosDestinos();
+        this.segundosDestinos = solution.getSegundosDestinos();
+        this.primerasBicisDejadas = solution.getPrimerasBicisDejadas();
+        this.segundasBicisDejadas = solution.getSegundasBicisDejadas();
+        this.beneficios = solution.getBeneficios();
+        this.costeTransporte = solution.getCosteTransporte();
+    }
+
     // ------------------------------------------------------------------------
     // Generadores de solución inicial
     // ------------------------------------------------------------------------
@@ -85,31 +96,32 @@ public class BicingSolution {
     // ------------------------------------------------------------------------
 
     /**
-     * Mueve la furgoneta con id 'idFurgoneta' desde la estación de origen con id 'idEstacionOrigenActual'
+     * Mueve la furgoneta con id 'idFurgoneta' desde su estación de origen actual
      * hasta la estación con id 'idEstacionFinal'
      * <p>
      * Factor ramificación: O(F * E)
+     * <p>
      *
-     * @param idFurgoneta            id de la furgoneta a mover
-     * @param idEstacionOrigenActual id de la estacion de origen actual de la furgoneta
-     * @param idEstacionFinal        id de la estacion a la que mover la furgoneta
+     * @param idFurgoneta     id de la furgoneta a mover
+     * @param idEstacionFinal id de la estacion a la que mover la furgoneta
      */
-    public void moverFurgoneta(int idFurgoneta, int idEstacionOrigenActual, int idEstacionFinal) {
-        // Empty
+    public boolean moverFurgoneta(int idFurgoneta, int idEstacionFinal) {
+        return false;
     }
 
     /**
-     * Cambia la estación destino con id 'idEstacionDestinoActual' de la furgoneta con id 'idFurgoneta' por la estación
+     * Cambia la estación destino actual de la furgoneta con id 'idFurgoneta' por la estación
      * con id 'idEstacionDestinoFinal'
      * <p>
      * Factor ramificación: O(F * E)
      *
-     * @param idFurgoneta             id de la furgoneta a cambiar de destino
-     * @param idEstacionDestinoActual id de la estación destino actual
-     * @param idEstacionDestinoFinal  id de la estación destino final
+     * @param idFurgoneta            id de la furgoneta a cambiar de destino
+     * @param destinoActual          destino a cambiar: 0 para el primer destino, 1 para el segundo destino
+     * @param idEstacionDestinoFinal id de la estación destino final
      */
-    public void cambiarEstacionDestino(int idFurgoneta, int idEstacionDestinoActual, int idEstacionDestinoFinal) {
+    public boolean cambiarEstacionDestino(int idFurgoneta, int destinoActual, int idEstacionDestinoFinal) {
         // Empty
+        return false;
     }
 
     /**
@@ -120,25 +132,31 @@ public class BicingSolution {
      * @param idFurgoneta1 id de la primera furgoneta a intercambiar
      * @param idFurgoneta2 id de la segunda furgoneta a intercambiar
      */
-    public void intercambiarFurgonetas(int idFurgoneta1, int idFurgoneta2) {
+    public boolean intercambiarFurgonetas(int idFurgoneta1, int idFurgoneta2) {
         // Empty
+        return false;
     }
 
-    /**
-     * Cargar furgoneta con id 'idFurgoneta' con 'numBicis' bicis
-     * <p>
-     * Factor ramificación: O(31 * F * F)
-     *
-     * @param idFurgoneta id de la furgoneta a la que cargar las bicis
-     * @param numBicis    número de bicis que cargar
-     */
-    public void cargarFurgoneta(int idFurgoneta, int numBicis) {
-        // Empty
-    }
+    // TODO: Discutir que hacer con el tema de las bicis ????
+//    /**
+//     * Cargar furgoneta con id 'idFurgoneta' con 'numBicis' bicis
+//     * <p>
+//     * Factor ramificación: O(31 * F * F)
+//     *
+//     * @param idFurgoneta id de la furgoneta a la que cargar las bicis
+//     * @param numBicis    número de bicis que cargar
+//     */
+//    public void cargarFurgoneta(int idFurgoneta, int numBicis) {
+//        // Empty
+//    }
 
     // ------------------------------------------------------------------------
     // Getters
     // ------------------------------------------------------------------------
+    public Estaciones getEstaciones() {
+        return this.estaciones;
+    }
+
     public int[] getAsignaciones() {
         return this.asignaciones;
     }
