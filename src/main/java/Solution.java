@@ -1,5 +1,3 @@
-package IA.java;
-
 import IA.Bicing.Estaciones;
 
 import java.util.Random;

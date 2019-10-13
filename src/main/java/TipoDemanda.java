@@ -1,5 +1,3 @@
-package IA.java;
-
 public enum TipoDemanda {
     EQUILIBRADA, PUNTA;
 
