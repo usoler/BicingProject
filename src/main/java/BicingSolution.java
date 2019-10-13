@@ -1,6 +1,7 @@
 import IA.Bicing.Estacion;
 import IA.Bicing.Estaciones;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class BicingSolution {
@@ -51,6 +52,10 @@ public class BicingSolution {
         this.costeTransporte = 0.0;
     }
 
+//    int[] src  = new int[]{1,2,3,4,5};
+//    int[] dest = new int[5];
+//    System.arraycopy( src, 0, dest, 0, src.length );
+
     /**
      * Genera una solucion copia de 'solution'
      *
@@ -58,13 +63,34 @@ public class BicingSolution {
      */
     public BicingSolution(BicingSolution solution) {
         this.estaciones = solution.getEstaciones();
-        this.asignaciones = solution.getAsignaciones();
-        this.primerosDestinos = solution.getPrimerosDestinos();
-        this.segundosDestinos = solution.getSegundosDestinos();
-        this.primerasBicisDejadas = solution.getPrimerasBicisDejadas();
-        this.segundasBicisDejadas = solution.getSegundasBicisDejadas();
-        this.beneficios = solution.getBeneficios();
-        this.costeTransporte = solution.getCosteTransporte();
+
+        int numFurgonetas = solution.getAsignaciones().length;
+
+        this.asignaciones = new int[numFurgonetas];
+
+        this.primerosDestinos = new int[numFurgonetas];
+        this.segundosDestinos = new int[numFurgonetas];
+
+        this.primerasBicisDejadas = new int[numFurgonetas];
+        this.segundasBicisDejadas = new int[numFurgonetas];
+
+//        this.asignaciones = solution.getAsignaciones();
+        System.arraycopy(solution.getAsignaciones(), 0, this.asignaciones, 0, solution.getAsignaciones().length);
+
+//        this.primerosDestinos = solution.getPrimerosDestinos();
+        System.arraycopy(solution.getPrimerosDestinos(), 0, this.primerosDestinos, 0, solution.getPrimerosDestinos().length);
+
+//        this.segundosDestinos = solution.getSegundosDestinos();
+        System.arraycopy(solution.getSegundosDestinos(), 0, this.segundosDestinos, 0, solution.getSegundosDestinos().length);
+
+//        this.primerasBicisDejadas = solution.getPrimerasBicisDejadas();
+        System.arraycopy(solution.getPrimerasBicisDejadas(), 0, this.primerasBicisDejadas, 0, solution.getPrimerasBicisDejadas().length);
+
+//        this.segundasBicisDejadas = solution.getSegundasBicisDejadas();
+        System.arraycopy(solution.getSegundasBicisDejadas(), 0, this.segundasBicisDejadas, 0, solution.getSegundasBicisDejadas().length);
+
+        this.beneficios = new Integer(solution.getBeneficios());
+        this.costeTransporte = new Double(solution.getCosteTransporte());
     }
 
     // ------------------------------------------------------------------------
@@ -113,7 +139,7 @@ public class BicingSolution {
     public boolean moverFurgoneta(int idFurgoneta, int idEstacionFinal) {
         if (puedeMoverFurgoneta(idFurgoneta, idEstacionFinal)) {
             int cargaFurgoneta = this.primerasBicisDejadas[idFurgoneta] + this.segundasBicisDejadas[idFurgoneta];
-
+            // TODO: RECALCULAR COSTE DISTANCIAS
             recalcularBeneficios(idFurgoneta, cargaFurgoneta, idEstacionFinal);
             this.asignaciones[idFurgoneta] = idEstacionFinal;
 
@@ -202,6 +228,10 @@ public class BicingSolution {
     // ------------------------------------------------------------------------
     // Métodos auxiliares
     // ------------------------------------------------------------------------
+    public boolean isGoalState() {
+        return false;
+    }
+
     private boolean[] inicializarArrayBooleana(boolean[] array) { //O(|E|)
         for (int i = 0; i < array.length; ++i) {
             array[i] = false;
@@ -455,7 +485,7 @@ public class BicingSolution {
 
         if (demandaEstacion > bicisLibres) {
             this.beneficios += cargaFurgoneta;
-        } else if (demandaEstacion > bicisLibres - cargaFurgoneta){
+        } else if (demandaEstacion > bicisLibres - cargaFurgoneta) {
             this.beneficios += (demandaEstacion - bicisLibres + cargaFurgoneta);
         } // else: no hubo penalizacion por fallo
 

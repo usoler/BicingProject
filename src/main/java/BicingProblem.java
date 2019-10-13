@@ -1,5 +1,9 @@
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
+
+import aima.search.framework.Problem;
+import aima.search.framework.Search;
+import aima.search.framework.SearchAgent;
+import aima.search.informed.HillClimbingSearch;
 
 public class BicingProblem {
 
@@ -41,6 +45,8 @@ public class BicingProblem {
         System.out.println("****************************************************");
         System.out.println(String.format("BENEFICIOS - COSTE POR FALLOS: '%s'", solucionInicial.getBeneficios()));
         System.out.println(String.format("COSTE POR TRANSPORTE: '%s'", solucionInicial.getCosteTransporte()));
+
+        BicingHillClimbingSearch(solucionInicial);
     }
 
     private static void mostrarMenu() {
@@ -70,4 +76,67 @@ public class BicingProblem {
         System.out.println("Generador: " + generadorSeleccionado);
         System.out.println("Heuristico: " + heuristicoSeleccionado);
     }
+
+    private static void BicingHillClimbingSearch(BicingSolution solution) {
+        try{
+            Problem problem = new Problem(solution, new BicingSuccessorFunction(), new BicingGoalTest(), new BicingHeuristicFunction1());
+            Search search = new HillClimbingSearch();
+            SearchAgent agent = new SearchAgent(problem, search);
+
+            printActions(agent.getActions());
+            printInstrumentation(agent.getInstrumentation());
+            System.out.print(((BicingSolution) search.getGoalState()).toString());
+//            System.out.println("\n" + ((BicingSolution) search.getGoalState()).correspondenciasToString());
+            BicingSolution goalSolution = ((BicingSolution) search.getGoalState());
+            System.out.println(String.format("FINAL : BENEFICIOS - COSTE POR FALLOS: '%s'", goalSolution.getBeneficios()));
+            System.out.println(String.format("FINAL: COSTE POR TRANSPORTE: '%s'", goalSolution.getCosteTransporte()));
+        } catch(Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
+    private static void printActions(List actions) {
+        for (int i = 0; i < actions.size(); i++) {
+            String action = (String) actions.get(i);
+            System.out.println(action);
+        }
+    }
+
+    private static void printInstrumentation(Properties properties) {
+        Iterator keys = properties.keySet().iterator();
+        while (keys.hasNext()) {
+            String key = (String) keys.next();
+            String property = properties.getProperty(key);
+            System.out.println(key + " : " + property);
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
