@@ -2,96 +2,25 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2ff90e44-3912-4411-8f2a-fd0040f194bf" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/basic/Agent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/basic/AgentProgram.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/basic/BasicEnvironmentView.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/basic/Environment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/basic/EnvironmentObject.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/basic/MockAgent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/basic/ObjectWithDynamicAttributes.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/basic/Percept.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/basic/Tokenizer.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/basic/Util.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/basic/Wall.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/basic/XYEnvironment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/basic/XYLocation.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/basic/vaccum/ModelBasedTVEVaccumAgent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/basic/vaccum/ModelBasedTVEVaccumAgentProgram.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/basic/vaccum/TrivialVaccumDemo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/basic/vaccum/TrivialVaccumEnvironment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/basic/vaccum/TveDemo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/basic/vaccum/VaccumEnvironmentModel.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/datastructures/FIFOQueue.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/datastructures/LIFOQueue.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/datastructures/PriorityQueue.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/csp/Assignment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/csp/CSP.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/csp/Constraint.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/csp/Domains.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/csp/MapCSP.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/csp/MapColoringConstraint.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/demos/CSPDemo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/demos/EightPuzzleDemo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/demos/GenerateRandomEightPuzzleBoard.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/demos/NQueensDemo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/demos/SearchDemos.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/eightpuzzle/EightPuzzleBoard.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/eightpuzzle/EightPuzzleGoalTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/eightpuzzle/EightPuzzleJFrame.form" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/eightpuzzle/EightPuzzleJFrame.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/eightpuzzle/EightPuzzleSuccessorFunction.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/eightpuzzle/ManhattanHeuristicFunction.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/eightpuzzle/MisplacedTilleHeuristicFunction.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/framework/DefaultHeuristicFunction.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/framework/DefaultStepCostFunction.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/framework/GoalTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/framework/GraphSearch.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/framework/HeuristicFunction.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/framework/Measurable.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/framework/Metrics.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/framework/Node.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/framework/NodeExpander.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/framework/NodeStore.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/framework/PrioritySearch.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/framework/Problem.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/framework/QueueSearch.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/framework/Search.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/framework/SearchAgent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/framework/SearchUtils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/framework/StepCostFunction.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/framework/Successor.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/framework/SuccessorFunction.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/framework/TreeSearch.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/informed/AStarSearch.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/informed/DepthLimitedSearch.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/informed/GreedyBestFirstSearch.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/informed/HillClimbingSearch.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/informed/IterativeDeepeningAStarSearch.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/informed/Scheduler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/informed/SimulatedAnnealingSearch.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/nodestore/FIFONodeStore.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/nodestore/LIFONodeStore.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/nodestore/PriorityNodeStore.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/nqueens/NQueensBoard.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/nqueens/NQueensGoalTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/nqueens/NQueensSuccessorFunction.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/nqueens/QueensToBePlacedHeuristic.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/uninformed/BreadthFirstSearch.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/uninformed/DepthFirstSearch.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/uninformed/DepthLimitedSearch.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/search/uninformed/IterativeDeepeningSearch.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/util/AbstractQueue.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/util/Calculator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/util/LogicUtils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/util/Pair.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/util/Queue.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/util/UniversalDictionary.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/aima/util/Util.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/BicingGoalTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BicingGoalTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/BicingHeuristicFunction1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BicingHeuristicFunction1.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/BicingHeuristicFunction2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BicingHeuristicFunction2.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/BicingSolution.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BicingSolution.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/BicingSuccessorFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BicingSuccessorFunction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/aima/search/demos/CSPDemo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/aima/search/demos/EightPuzzleDemo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/aima/search/demos/GenerateRandomEightPuzzleBoard.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/aima/search/demos/NQueensDemo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/aima/search/demos/SearchDemos.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/aima/search/eightpuzzle/EightPuzzleBoard.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/aima/search/eightpuzzle/EightPuzzleGoalTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/aima/search/eightpuzzle/EightPuzzleJFrame.form" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/aima/search/eightpuzzle/EightPuzzleJFrame.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/aima/search/eightpuzzle/EightPuzzleSuccessorFunction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/aima/search/eightpuzzle/ManhattanHeuristicFunction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/aima/search/eightpuzzle/MisplacedTilleHeuristicFunction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/aima/search/nqueens/NQueensBoard.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/aima/search/nqueens/NQueensGoalTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/aima/search/nqueens/NQueensSuccessorFunction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/aima/search/nqueens/QueensToBePlacedHeuristic.java" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -124,7 +53,11 @@
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/java" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main" />
       <recent name="$PROJECT_DIR$/src/main/java" />
       <recent name="$PROJECT_DIR$/src/main/resources" />
     </key>
