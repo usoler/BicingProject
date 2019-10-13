@@ -3,7 +3,6 @@ import IA.Bicing.Estaciones;
 
 import java.util.Random;
 
-// TODO: code refactor
 public class Solution {
     private static final int NUM_MAX_BICIS_FURGONETA = 30;
 
@@ -55,23 +54,28 @@ public class Solution {
     // ------------------------------------------------------------------------
     // Generadores de solución inicial
     // ------------------------------------------------------------------------
+
+    /**
+     * Genera una solucion inicial random
+     */
     public void generadorSolucion1() { // Coste total: O(|E|+|F|)
         Random random = new Random();
 
         boolean[] estacionesAsignadas = new boolean[this.estaciones.size()];
-        estacionesAsignadas = inicializarArrayBooleana(estacionesAsignadas);    // O(|E|)
+        estacionesAsignadas = inicializarArrayBooleana(estacionesAsignadas);        // O(|E|)
 
-        for (int i = 0; i < this.asignaciones.length; ++i) { // O(|F|)
+        for (int i = 0; i < this.asignaciones.length; ++i) {                        // O(|F|)
             estacionesAsignadas = asignarFurgoneta(i, estacionesAsignadas, random); // O(1)
+
             if (this.asignaciones[i] == -1) {
                 this.primerosDestinos[i] = -1;
                 this.segundosDestinos[i] = -1;
                 this.primerasBicisDejadas[i] = 0;
                 this.segundasBicisDejadas[i] = 0;
             } else {
-                asignarDestinos(i, random); // O(1)
-                asignarCargaDestinos(i, random); // O(1)
-                calcularCosteTransporte(i); // O(1)
+                asignarDestinos(i, random);         // O(1)
+                asignarCargaDestinos(i, random);    // O(1)
+                calcularCosteTransporte(i);         // O(1)
             }
         }
     }
@@ -192,21 +196,22 @@ public class Solution {
     }
 
     private void asignarDestinos(int idFurgoneta, Random random) { // O(1)
-        int idEstacionRandom = this.estaciones.size();
-        int idEstacionDestinoRandom = random.nextInt(idEstacionRandom);
+        int numTotalEstaciones = this.estaciones.size(); // 0 <= id estacion < numTotalEstaciones
+        int idEstacionOrigen = this.asignaciones[idFurgoneta];
+        int idDestino1Random = random.nextInt(numTotalEstaciones);
         System.out.println(String.format("Asignando a la furgoneta con id '%s' la estacion destino random '%s'",
-                idFurgoneta, idEstacionDestinoRandom));
+                idFurgoneta, idDestino1Random));
 
-        if ((idEstacionDestinoRandom != idEstacionRandom) && (idEstacionDestinoRandom != this.asignaciones[idFurgoneta])) {
-            this.primerosDestinos[idFurgoneta] = idEstacionDestinoRandom;
+        if ((idDestino1Random < numTotalEstaciones) && (idDestino1Random != idEstacionOrigen)) {
+            this.primerosDestinos[idFurgoneta] = idDestino1Random;
             System.out.println(String.format("Asignada la estacion destino1 random '%s'",
                     this.primerosDestinos[idFurgoneta]));
-            idEstacionDestinoRandom = random.nextInt(idEstacionRandom);
-            System.out.println(String.format("Asignando la estacion destino2 random '%s'", idEstacionDestinoRandom));
-            if ((idEstacionDestinoRandom != idEstacionRandom) &&
-                    (this.primerosDestinos[idFurgoneta] != idEstacionDestinoRandom) &&
-                    (idEstacionDestinoRandom != this.asignaciones[idFurgoneta])) {
-                this.segundosDestinos[idFurgoneta] = idEstacionDestinoRandom;
+            int idDestino2Random = random.nextInt(numTotalEstaciones);
+            System.out.println(String.format("Asignando la estacion destino2 random '%s'", idDestino2Random));
+            if ((idDestino2Random < numTotalEstaciones) &&
+                    (this.primerosDestinos[idFurgoneta] != idDestino2Random) &&
+                    (idDestino2Random != this.asignaciones[idFurgoneta])) {
+                this.segundosDestinos[idFurgoneta] = idDestino2Random;
                 System.out.println(String.format("Asignada la estacion destino2 random '%s'",
                         this.segundosDestinos[idFurgoneta]));
             } else {
@@ -217,10 +222,10 @@ public class Solution {
             this.segundosDestinos[idFurgoneta] = -1;
             System.out.println(String.format("Asignada la estacion destino2 random '%s'",
                     this.segundosDestinos[idFurgoneta]));
-            idEstacionDestinoRandom = random.nextInt(idEstacionRandom);
-            System.out.println(String.format("Asignando la estacion destino1 random '%s'", idEstacionDestinoRandom));
-            if ((idEstacionDestinoRandom != idEstacionRandom) && (idEstacionDestinoRandom != this.asignaciones[idFurgoneta])) {
-                this.primerosDestinos[idFurgoneta] = idEstacionDestinoRandom;
+            idDestino1Random = random.nextInt(numTotalEstaciones);
+            System.out.println(String.format("Asignando la estacion destino1 random '%s'", idDestino1Random));
+            if ((idDestino1Random < numTotalEstaciones) && (idDestino1Random != idEstacionOrigen)) {
+                this.primerosDestinos[idFurgoneta] = idDestino1Random;
             } else {
                 this.primerosDestinos[idFurgoneta] = -1;
             }
@@ -299,7 +304,7 @@ public class Solution {
     }
 
     private int penalizarCostePorFallos(int numBicisDemandadasEstacionOrigen, int numBicisDisponiblesEstacionOrigen,
-                                        int cargaRandom) { // O(1)
+                                        int cargaRandom) {      // O(1)
         System.out.println("Penalizamos fallos");
         boolean existeDeficitAntesDeCargar = (numBicisDemandadasEstacionOrigen > numBicisDisponiblesEstacionOrigen);
         boolean existeDeficitDespuesDeCargar = (numBicisDemandadasEstacionOrigen > numBicisDisponiblesEstacionOrigen - cargaRandom);
@@ -321,7 +326,7 @@ public class Solution {
     }
 
     private void obtenerBeneficiosPorAciertos(int numBicisDemandadasDestino, int numBicisDisponiblesDestino,
-                                              int cargaRandom) { // O(1)
+                                              int cargaRandom) {        // O(1)
         System.out.println("Obtenemos beneficios por aciertos");
         boolean existeDeficitAntesDeDescargar = (numBicisDemandadasDestino > numBicisDisponiblesDestino);
         boolean existeDeficitDespuesDeDescargar = (numBicisDemandadasDestino > numBicisDisponiblesDestino + cargaRandom);
@@ -332,13 +337,14 @@ public class Solution {
             System.out.println(String.format("Beneficio por acierto = '%s'", cargaRandom));
         } else if (existeDeficitAntesDeDescargar && !(existeDeficitDespuesDeDescargar)) {
             this.beneficios += (numBicisDemandadasDestino - numBicisDisponiblesDestino);
-            System.out.println(String.format("Beneficio por acierto = '%s'", (numBicisDemandadasDestino - numBicisDisponiblesDestino)));
+            System.out.println(String.format("Beneficio por acierto = '%s'",
+                    (numBicisDemandadasDestino - numBicisDisponiblesDestino)));
         } else {
             System.out.println("No hay beneficios obtenidos");
         }
     }
 
-    private void calcularCosteTransporte(int idFurgoneta) { // O(1)
+    private void calcularCosteTransporte(int idFurgoneta) {         // O(1)
         int idOrigen = this.asignaciones[idFurgoneta];
         int idDestino1 = this.primerosDestinos[idFurgoneta];
         int idDestino2 = this.segundosDestinos[idFurgoneta];
