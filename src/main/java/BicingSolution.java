@@ -1,7 +1,6 @@
 import IA.Bicing.Estacion;
 import IA.Bicing.Estaciones;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 public class BicingSolution {
@@ -52,16 +51,12 @@ public class BicingSolution {
         this.costeTransporte = 0.0;
     }
 
-//    int[] src  = new int[]{1,2,3,4,5};
-//    int[] dest = new int[5];
-//    System.arraycopy( src, 0, dest, 0, src.length );
-
     /**
      * Genera una solucion copia de 'solution'
      *
      * @param solution solucion a copiar
      */
-    public BicingSolution(BicingSolution solution) {
+    public BicingSolution(BicingSolution solution) { // TODO: Refactor code
         this.estaciones = solution.getEstaciones();
 
         int numFurgonetas = solution.getAsignaciones().length;
@@ -74,19 +69,10 @@ public class BicingSolution {
         this.primerasBicisDejadas = new int[numFurgonetas];
         this.segundasBicisDejadas = new int[numFurgonetas];
 
-//        this.asignaciones = solution.getAsignaciones();
         System.arraycopy(solution.getAsignaciones(), 0, this.asignaciones, 0, solution.getAsignaciones().length);
-
-//        this.primerosDestinos = solution.getPrimerosDestinos();
         System.arraycopy(solution.getPrimerosDestinos(), 0, this.primerosDestinos, 0, solution.getPrimerosDestinos().length);
-
-//        this.segundosDestinos = solution.getSegundosDestinos();
         System.arraycopy(solution.getSegundosDestinos(), 0, this.segundosDestinos, 0, solution.getSegundosDestinos().length);
-
-//        this.primerasBicisDejadas = solution.getPrimerasBicisDejadas();
         System.arraycopy(solution.getPrimerasBicisDejadas(), 0, this.primerasBicisDejadas, 0, solution.getPrimerasBicisDejadas().length);
-
-//        this.segundasBicisDejadas = solution.getSegundasBicisDejadas();
         System.arraycopy(solution.getSegundasBicisDejadas(), 0, this.segundasBicisDejadas, 0, solution.getSegundasBicisDejadas().length);
 
         this.beneficios = new Integer(solution.getBeneficios());
@@ -137,11 +123,12 @@ public class BicingSolution {
      * @param idEstacionFinal id de la estacion a la que mover la furgoneta
      */
     public boolean moverFurgoneta(int idFurgoneta, int idEstacionFinal) {
-        if (puedeMoverFurgoneta(idFurgoneta, idEstacionFinal)) {
+        if (puedeMoverFurgoneta(idFurgoneta, idEstacionFinal)) { // TODO: FIX 2 furgonetas pueden estar en el mismo origen
             int cargaFurgoneta = this.primerasBicisDejadas[idFurgoneta] + this.segundasBicisDejadas[idFurgoneta];
-            // TODO: RECALCULAR COSTE DISTANCIAS
+            deshacerCalculoCosteTransporte(idFurgoneta);
             recalcularBeneficios(idFurgoneta, cargaFurgoneta, idEstacionFinal);
             this.asignaciones[idFurgoneta] = idEstacionFinal;
+            calcularCosteTransporte(idFurgoneta);
 
             return true;
         }
@@ -495,5 +482,65 @@ public class BicingSolution {
         bicisLibres = estacion.getNumBicicletasNext();
 
         penalizarCostePorFallos(demandaEstacion, bicisLibres, cargaFurgoneta);
+    }
+
+    private void deshacerCalculoCosteTransporte(int idFurgoneta) {         // O(1)
+        int idOrigen = this.asignaciones[idFurgoneta];
+        int idDestino1 = this.primerosDestinos[idFurgoneta];
+        int idDestino2 = this.segundosDestinos[idFurgoneta];
+        System.out.println(String.format("Estacion origen = '%s'", idOrigen));
+        System.out.println(String.format("Destino1 = '%s'", idDestino1));
+        System.out.println(String.format("Destino2 = '%s'", idDestino2));
+        if ((idOrigen != -1) && (idDestino1 != -1)) {
+            System.out.println(String.format("Calculo del coste de transporte del primer destino:"));
+            Estacion estacionOrigen = this.estaciones.get(idOrigen);
+            int ix = estacionOrigen.getCoordX();
+            int iy = estacionOrigen.getCoordY();
+            System.out.println(String.format("ix = '%s'", ix));
+            System.out.println(String.format("iy = '%s'", iy));
+            Estacion estacionDestino1 = this.estaciones.get(idDestino1);
+            int jx = estacionDestino1.getCoordX();
+            int jy = estacionDestino1.getCoordY();
+            System.out.println(String.format("jx = '%s'", jx));
+            System.out.println(String.format("jy = '%s'", jy));
+
+            double distanciaEnMetros = Math.abs(ix - jx) + Math.abs(iy - jy);
+            System.out.println(String.format("Distancia(metros) = '%s'", distanciaEnMetros));
+
+            int cargaTotalBicis = this.primerasBicisDejadas[idFurgoneta];
+
+            if (idDestino2 != -1) {
+                cargaTotalBicis += this.segundasBicisDejadas[idFurgoneta];
+            }
+            System.out.println(String.format("Carga total bicis = '%s'", cargaTotalBicis));
+
+            double coste = ((double) (cargaTotalBicis + 9) / 10); // euros/km
+            System.out.println(String.format("Coste primer destino = '%s'", coste));
+
+            this.costeTransporte -= (coste * (distanciaEnMetros / 1000));
+            System.out.println(String.format("Coste de transporte total anadido = '%s'", (coste * (distanciaEnMetros / 1000))));
+
+            if (idDestino2 != -1) {
+                System.out.println(String.format("Calculo del coste de transporte del segundo destino:"));
+                Estacion estacionDestino2 = this.estaciones.get(idDestino2);
+                int kx = estacionDestino2.getCoordX();
+                int ky = estacionDestino2.getCoordY();
+                System.out.println(String.format("kx = '%s'", kx));
+                System.out.println(String.format("ky = '%s'", ky));
+
+                distanciaEnMetros = Math.abs(jx - kx) + Math.abs(jy - ky);
+                System.out.println(String.format("Distancia(metros) = '%s'", distanciaEnMetros));
+
+                cargaTotalBicis -= this.primerasBicisDejadas[idFurgoneta];
+                System.out.println(String.format("Carga total bicis = '%s'", cargaTotalBicis));
+
+
+                coste = ((double) (cargaTotalBicis + 9) / 10); // euros/km
+                System.out.println(String.format("Coste primer destino = '%s'", coste));
+
+                this.costeTransporte -= (coste * (distanciaEnMetros / 1000));
+                System.out.println(String.format("Coste de transporte total anadido = '%s'", (coste * (distanciaEnMetros / 1000))));
+            }
+        }
     }
 }

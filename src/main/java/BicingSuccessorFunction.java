@@ -15,7 +15,6 @@ public class BicingSuccessorFunction implements SuccessorFunction {
         int numFurgonetas = solution.getAsignaciones().length;
         int numEstaciones = solution.getEstaciones().size();
 
-        int contadorSucesores = 0; // TODO: ELIMINAR, es solo para test
         for (int i = 0; i < numFurgonetas; ++i) { // O(|F|) * O(|F| + |E|)
             // Sucesores generados por el operador 'moverFurgoneta'
             for (int j = 0; j < numEstaciones; ++j) { // O(|E|)
@@ -23,9 +22,7 @@ public class BicingSuccessorFunction implements SuccessorFunction {
                 if (nuevaSolution.moverFurgoneta(i, j)) {
                     String actionMessage = String.format("Furgoneta con id = '%s' movida a estacion con id = '%s'",
                             i, j);
-                    System.out.println(String.format("Sucesor '%s'", contadorSucesores));
                     successors.add(new Successor(actionMessage, nuevaSolution));
-                    ++contadorSucesores; // TODO: ELIMINAR, es solo para test
                 }
             }
 
@@ -58,7 +55,7 @@ public class BicingSuccessorFunction implements SuccessorFunction {
     }
 
     private void printSuccessors(ArrayList<Successor> successors) {
-        for(int i = 0; i < successors.size(); ++i){
+        for (int i = 0; i < successors.size(); ++i) {
             System.out.println("***********************************");
             System.out.println(String.format("Sucesor: '%s'", i));
             Successor successor = successors.get(i);
