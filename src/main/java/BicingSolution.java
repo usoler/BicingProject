@@ -3,7 +3,7 @@ import IA.Bicing.Estaciones;
 
 import java.util.Random;
 
-public class Solution {
+public class BicingSolution {
     private static final int NUM_MAX_BICIS_FURGONETA = 30;
 
     private static Estaciones estaciones;       // ArrayList de objetos tipo Estacion del problema
@@ -36,7 +36,7 @@ public class Solution {
      * @param tipoDemanda   tipo de demanda de la hora actual (Equilibrada o Punta)
      * @param semilla       semilla aleatoria
      */
-    public Solution(int numEstaciones, int numBicisTotal, int numFurgonetas, TipoDemanda tipoDemanda, int semilla) {
+    public BicingSolution(int numEstaciones, int numBicisTotal, int numFurgonetas, TipoDemanda tipoDemanda, int semilla) {
         this.estaciones = new Estaciones(numEstaciones, numBicisTotal, TipoDemanda.getCode(tipoDemanda), semilla);
 
         this.asignaciones = new int[numFurgonetas];

@@ -1,7 +1,7 @@
 import java.util.Random;
 import java.util.Scanner;
 
-public class Problem {
+public class BicingProblem {
 
     // TODO: añadir bucle y menú de opciones
 
@@ -33,7 +33,7 @@ public class Problem {
                 algoritmoSeleccionado, generadorSeleccionado, heuristicoSeleccionado);
 
         // Empezamos solucion inicial ------------------------------
-        Solution solucionInicial = new Solution(numeroEstaciones, numeroBicisTotal, numeroFurgonetas, tipoDemanda,
+        BicingSolution solucionInicial = new BicingSolution(numeroEstaciones, numeroBicisTotal, numeroFurgonetas, tipoDemanda,
                 semilla);
         System.out.println("EMPEZAMOS LA GENERACION");
         solucionInicial.generadorSolucion1();
