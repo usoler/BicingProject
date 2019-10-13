@@ -51,6 +51,11 @@ public class BicingSolution {
         this.costeTransporte = 0.0;
     }
 
+    /**
+     * Genera una solucion copia de 'solution'
+     *
+     * @param solution solucion a copiar
+     */
     public BicingSolution(BicingSolution solution) {
         this.estaciones = solution.getEstaciones();
         this.asignaciones = solution.getAsignaciones();
@@ -106,6 +111,15 @@ public class BicingSolution {
      * @param idEstacionFinal id de la estacion a la que mover la furgoneta
      */
     public boolean moverFurgoneta(int idFurgoneta, int idEstacionFinal) {
+        if (puedeMoverFurgoneta(idFurgoneta, idEstacionFinal)) {
+            int cargaFurgoneta = this.primerasBicisDejadas[idFurgoneta] + this.segundasBicisDejadas[idFurgoneta];
+
+            recalcularBeneficios(idFurgoneta, cargaFurgoneta, idEstacionFinal);
+            this.asignaciones[idFurgoneta] = idEstacionFinal;
+
+            return true;
+        }
+
         return false;
     }
 
@@ -420,5 +434,36 @@ public class BicingSolution {
                 System.out.println(String.format("Coste de transporte total anadido = '%s'", (coste * (distanciaEnMetros / 1000))));
             }
         }
+    }
+
+    // Si la estacion final es la misma que la actual, devuelve false
+    // Si la estacion final no tiene bicis disponibles que la carga actual, devuelve false
+    // otherwise devuelve true
+    private boolean puedeMoverFurgoneta(int idFurgoneta, int idEstacionFinal) {
+        int idEstacionOrigenActual = this.asignaciones[idFurgoneta];
+        int cargaFurgoneta = this.primerasBicisDejadas[idFurgoneta] + this.segundasBicisDejadas[idFurgoneta];
+        int bicisDisponiblesEstacionFinal = this.estaciones.get(idEstacionFinal).getNumBicicletasNext();
+
+        return ((idEstacionFinal != idEstacionOrigenActual) && (cargaFurgoneta <= bicisDisponiblesEstacionFinal));
+    }
+
+    private void recalcularBeneficios(int idFurgoneta, int cargaFurgoneta, int idEstacionFinal) {
+        // Devolver beneficios de la estacion actual
+        Estacion estacion = this.estaciones.get(this.asignaciones[idFurgoneta]);
+        int demandaEstacion = estacion.getDemanda();
+        int bicisLibres = estacion.getNumBicicletasNext();
+
+        if (demandaEstacion > bicisLibres) {
+            this.beneficios += cargaFurgoneta;
+        } else if (demandaEstacion > bicisLibres - cargaFurgoneta){
+            this.beneficios += (demandaEstacion - bicisLibres + cargaFurgoneta);
+        } // else: no hubo penalizacion por fallo
+
+        // Calcular beneficios de la estacion final
+        estacion = this.estaciones.get(idEstacionFinal);
+        demandaEstacion = estacion.getDemanda();
+        bicisLibres = estacion.getNumBicicletasNext();
+
+        penalizarCostePorFallos(demandaEstacion, bicisLibres, cargaFurgoneta);
     }
 }

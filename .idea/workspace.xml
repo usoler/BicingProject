@@ -4,23 +4,6 @@
     <list default="true" id="2ff90e44-3912-4411-8f2a-fd0040f194bf" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/BicingSolution.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BicingSolution.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/BicingSuccessorFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BicingSuccessorFunction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/aima/search/demos/CSPDemo.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/aima/search/demos/EightPuzzleDemo.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/aima/search/demos/GenerateRandomEightPuzzleBoard.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/aima/search/demos/NQueensDemo.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/aima/search/demos/SearchDemos.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/aima/search/eightpuzzle/EightPuzzleBoard.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/aima/search/eightpuzzle/EightPuzzleGoalTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/aima/search/eightpuzzle/EightPuzzleJFrame.form" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/aima/search/eightpuzzle/EightPuzzleJFrame.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/aima/search/eightpuzzle/EightPuzzleSuccessorFunction.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/aima/search/eightpuzzle/ManhattanHeuristicFunction.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/aima/search/eightpuzzle/MisplacedTilleHeuristicFunction.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/aima/search/nqueens/NQueensBoard.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/aima/search/nqueens/NQueensGoalTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/aima/search/nqueens/NQueensSuccessorFunction.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/aima/search/nqueens/QueensToBePlacedHeuristic.java" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
