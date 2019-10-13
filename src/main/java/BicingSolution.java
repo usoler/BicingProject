@@ -51,15 +51,32 @@ public class BicingSolution {
         this.costeTransporte = 0.0;
     }
 
-    public BicingSolution(BicingSolution solution) {
+    /**
+     * Genera una solucion copia de 'solution'
+     *
+     * @param solution solucion a copiar
+     */
+    public BicingSolution(BicingSolution solution) { // TODO: Refactor code
         this.estaciones = solution.getEstaciones();
-        this.asignaciones = solution.getAsignaciones();
-        this.primerosDestinos = solution.getPrimerosDestinos();
-        this.segundosDestinos = solution.getSegundosDestinos();
-        this.primerasBicisDejadas = solution.getPrimerasBicisDejadas();
-        this.segundasBicisDejadas = solution.getSegundasBicisDejadas();
-        this.beneficios = solution.getBeneficios();
-        this.costeTransporte = solution.getCosteTransporte();
+
+        int numFurgonetas = solution.getAsignaciones().length;
+
+        this.asignaciones = new int[numFurgonetas];
+
+        this.primerosDestinos = new int[numFurgonetas];
+        this.segundosDestinos = new int[numFurgonetas];
+
+        this.primerasBicisDejadas = new int[numFurgonetas];
+        this.segundasBicisDejadas = new int[numFurgonetas];
+
+        System.arraycopy(solution.getAsignaciones(), 0, this.asignaciones, 0, solution.getAsignaciones().length);
+        System.arraycopy(solution.getPrimerosDestinos(), 0, this.primerosDestinos, 0, solution.getPrimerosDestinos().length);
+        System.arraycopy(solution.getSegundosDestinos(), 0, this.segundosDestinos, 0, solution.getSegundosDestinos().length);
+        System.arraycopy(solution.getPrimerasBicisDejadas(), 0, this.primerasBicisDejadas, 0, solution.getPrimerasBicisDejadas().length);
+        System.arraycopy(solution.getSegundasBicisDejadas(), 0, this.segundasBicisDejadas, 0, solution.getSegundasBicisDejadas().length);
+
+        this.beneficios = new Integer(solution.getBeneficios());
+        this.costeTransporte = new Double(solution.getCosteTransporte());
     }
 
     // ------------------------------------------------------------------------
@@ -106,6 +123,16 @@ public class BicingSolution {
      * @param idEstacionFinal id de la estacion a la que mover la furgoneta
      */
     public boolean moverFurgoneta(int idFurgoneta, int idEstacionFinal) {
+        if (puedeMoverFurgoneta(idFurgoneta, idEstacionFinal)) { // TODO: FIX 2 furgonetas pueden estar en el mismo origen
+            int cargaFurgoneta = this.primerasBicisDejadas[idFurgoneta] + this.segundasBicisDejadas[idFurgoneta];
+            deshacerCalculoCosteTransporte(idFurgoneta);
+            recalcularBeneficios(idFurgoneta, cargaFurgoneta, idEstacionFinal);
+            this.asignaciones[idFurgoneta] = idEstacionFinal;
+            calcularCosteTransporte(idFurgoneta);
+
+            return true;
+        }
+
         return false;
     }
 
@@ -188,6 +215,10 @@ public class BicingSolution {
     // ------------------------------------------------------------------------
     // Métodos auxiliares
     // ------------------------------------------------------------------------
+    public boolean isGoalState() {
+        return false;
+    }
+
     private boolean[] inicializarArrayBooleana(boolean[] array) { //O(|E|)
         for (int i = 0; i < array.length; ++i) {
             array[i] = false;
@@ -417,6 +448,97 @@ public class BicingSolution {
                 System.out.println(String.format("Coste primer destino = '%s'", coste));
 
                 this.costeTransporte += (coste * (distanciaEnMetros / 1000));
+                System.out.println(String.format("Coste de transporte total anadido = '%s'", (coste * (distanciaEnMetros / 1000))));
+            }
+        }
+    }
+
+    // Si la estacion final es la misma que la actual, devuelve false
+    // Si la estacion final no tiene bicis disponibles que la carga actual, devuelve false
+    // otherwise devuelve true
+    private boolean puedeMoverFurgoneta(int idFurgoneta, int idEstacionFinal) {
+        int idEstacionOrigenActual = this.asignaciones[idFurgoneta];
+        int cargaFurgoneta = this.primerasBicisDejadas[idFurgoneta] + this.segundasBicisDejadas[idFurgoneta];
+        int bicisDisponiblesEstacionFinal = this.estaciones.get(idEstacionFinal).getNumBicicletasNext();
+
+        return ((idEstacionFinal != idEstacionOrigenActual) && (cargaFurgoneta <= bicisDisponiblesEstacionFinal));
+    }
+
+    private void recalcularBeneficios(int idFurgoneta, int cargaFurgoneta, int idEstacionFinal) {
+        // Devolver beneficios de la estacion actual
+        Estacion estacion = this.estaciones.get(this.asignaciones[idFurgoneta]);
+        int demandaEstacion = estacion.getDemanda();
+        int bicisLibres = estacion.getNumBicicletasNext();
+
+        if (demandaEstacion > bicisLibres) {
+            this.beneficios += cargaFurgoneta;
+        } else if (demandaEstacion > bicisLibres - cargaFurgoneta) {
+            this.beneficios += (demandaEstacion - bicisLibres + cargaFurgoneta);
+        } // else: no hubo penalizacion por fallo
+
+        // Calcular beneficios de la estacion final
+        estacion = this.estaciones.get(idEstacionFinal);
+        demandaEstacion = estacion.getDemanda();
+        bicisLibres = estacion.getNumBicicletasNext();
+
+        penalizarCostePorFallos(demandaEstacion, bicisLibres, cargaFurgoneta);
+    }
+
+    private void deshacerCalculoCosteTransporte(int idFurgoneta) {         // O(1)
+        int idOrigen = this.asignaciones[idFurgoneta];
+        int idDestino1 = this.primerosDestinos[idFurgoneta];
+        int idDestino2 = this.segundosDestinos[idFurgoneta];
+        System.out.println(String.format("Estacion origen = '%s'", idOrigen));
+        System.out.println(String.format("Destino1 = '%s'", idDestino1));
+        System.out.println(String.format("Destino2 = '%s'", idDestino2));
+        if ((idOrigen != -1) && (idDestino1 != -1)) {
+            System.out.println(String.format("Calculo del coste de transporte del primer destino:"));
+            Estacion estacionOrigen = this.estaciones.get(idOrigen);
+            int ix = estacionOrigen.getCoordX();
+            int iy = estacionOrigen.getCoordY();
+            System.out.println(String.format("ix = '%s'", ix));
+            System.out.println(String.format("iy = '%s'", iy));
+            Estacion estacionDestino1 = this.estaciones.get(idDestino1);
+            int jx = estacionDestino1.getCoordX();
+            int jy = estacionDestino1.getCoordY();
+            System.out.println(String.format("jx = '%s'", jx));
+            System.out.println(String.format("jy = '%s'", jy));
+
+            double distanciaEnMetros = Math.abs(ix - jx) + Math.abs(iy - jy);
+            System.out.println(String.format("Distancia(metros) = '%s'", distanciaEnMetros));
+
+            int cargaTotalBicis = this.primerasBicisDejadas[idFurgoneta];
+
+            if (idDestino2 != -1) {
+                cargaTotalBicis += this.segundasBicisDejadas[idFurgoneta];
+            }
+            System.out.println(String.format("Carga total bicis = '%s'", cargaTotalBicis));
+
+            double coste = ((double) (cargaTotalBicis + 9) / 10); // euros/km
+            System.out.println(String.format("Coste primer destino = '%s'", coste));
+
+            this.costeTransporte -= (coste * (distanciaEnMetros / 1000));
+            System.out.println(String.format("Coste de transporte total anadido = '%s'", (coste * (distanciaEnMetros / 1000))));
+
+            if (idDestino2 != -1) {
+                System.out.println(String.format("Calculo del coste de transporte del segundo destino:"));
+                Estacion estacionDestino2 = this.estaciones.get(idDestino2);
+                int kx = estacionDestino2.getCoordX();
+                int ky = estacionDestino2.getCoordY();
+                System.out.println(String.format("kx = '%s'", kx));
+                System.out.println(String.format("ky = '%s'", ky));
+
+                distanciaEnMetros = Math.abs(jx - kx) + Math.abs(jy - ky);
+                System.out.println(String.format("Distancia(metros) = '%s'", distanciaEnMetros));
+
+                cargaTotalBicis -= this.primerasBicisDejadas[idFurgoneta];
+                System.out.println(String.format("Carga total bicis = '%s'", cargaTotalBicis));
+
+
+                coste = ((double) (cargaTotalBicis + 9) / 10); // euros/km
+                System.out.println(String.format("Coste primer destino = '%s'", coste));
+
+                this.costeTransporte -= (coste * (distanciaEnMetros / 1000));
                 System.out.println(String.format("Coste de transporte total anadido = '%s'", (coste * (distanciaEnMetros / 1000))));
             }
         }
