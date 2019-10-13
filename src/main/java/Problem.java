@@ -40,6 +40,7 @@ public class Problem {
         System.out.println("FINAL DE LA GENERACION");
         System.out.println("****************************************************");
         System.out.println(String.format("BENEFICIOS - COSTE POR FALLOS: '%s'", solucionInicial.getBeneficios()));
+        System.out.println(String.format("COSTE POR TRANSPORTE: '%s'", solucionInicial.getCosteTransporte()));
     }
 
     private static void mostrarMenu() {

@@ -1,3 +1,4 @@
+import IA.Bicing.Estacion;
 import IA.Bicing.Estaciones;
 
 import java.util.Random;
@@ -62,11 +63,17 @@ public class Solution {
 
         for (int i = 0; i < this.asignaciones.length; ++i) { // O(|F|)
             estacionesAsignadas = asignarFurgoneta(i, estacionesAsignadas, random); // O(1)
-            asignarDestinos(i, random); // O(1)
-            asignarCargaDestinos(i, random); // O(1)
+            if (this.asignaciones[i] == -1) {
+                this.primerosDestinos[i] = -1;
+                this.segundosDestinos[i] = -1;
+                this.primerasBicisDejadas[i] = 0;
+                this.segundasBicisDejadas[i] = 0;
+            } else {
+                asignarDestinos(i, random); // O(1)
+                asignarCargaDestinos(i, random); // O(1)
+                calcularCosteTransporte(i); // O(1)
+            }
         }
-
-        // TODO: calcular coste por transporte
     }
 
     // ------------------------------------------------------------------------
@@ -169,17 +176,17 @@ public class Solution {
 
     private boolean[] asignarFurgoneta(int idFurgoneta, boolean[] estacionesAsignadas, Random random) { // O(1)
         int idEstacionRandom = random.nextInt(estacionesAsignadas.length);
-        System.out.println(String.format("Asignando a la furgoneta con id '%s' la estacion origen random '%s",
+        System.out.println(String.format("Asignando a la furgoneta con id '%s' la estacion origen random '%s'",
                 idFurgoneta, idEstacionRandom));
 
-        if (idEstacionRandom != (estacionesAsignadas.length + 1) || !estacionesAsignadas[idEstacionRandom]) {
+        if (idEstacionRandom != (estacionesAsignadas.length + 1) && !estacionesAsignadas[idEstacionRandom]) {
             estacionesAsignadas[idFurgoneta] = true;
         } else {
             idEstacionRandom = -1;
         }
 
         this.asignaciones[idFurgoneta] = idEstacionRandom;
-        System.out.println(String.format("Asignada la estacion origen random '%s", this.asignaciones[idFurgoneta]));
+        System.out.println(String.format("Asignada la estacion origen random '%s'", this.asignaciones[idFurgoneta]));
 
         return estacionesAsignadas;
     }
@@ -190,16 +197,21 @@ public class Solution {
         System.out.println(String.format("Asignando a la furgoneta con id '%s' la estacion destino random '%s'",
                 idFurgoneta, idEstacionDestinoRandom));
 
-        if (idEstacionDestinoRandom != idEstacionRandom) {
+        if ((idEstacionDestinoRandom != idEstacionRandom) && (idEstacionDestinoRandom != this.asignaciones[idFurgoneta])) {
             this.primerosDestinos[idFurgoneta] = idEstacionDestinoRandom;
             System.out.println(String.format("Asignada la estacion destino1 random '%s'",
                     this.primerosDestinos[idFurgoneta]));
             idEstacionDestinoRandom = random.nextInt(idEstacionRandom);
             System.out.println(String.format("Asignando la estacion destino2 random '%s'", idEstacionDestinoRandom));
-            if ((idEstacionDestinoRandom != idEstacionRandom) && (this.primerosDestinos[idFurgoneta] != idEstacionDestinoRandom)) {
+            if ((idEstacionDestinoRandom != idEstacionRandom) &&
+                    (this.primerosDestinos[idFurgoneta] != idEstacionDestinoRandom) &&
+                    (idEstacionDestinoRandom != this.asignaciones[idFurgoneta])) {
                 this.segundosDestinos[idFurgoneta] = idEstacionDestinoRandom;
                 System.out.println(String.format("Asignada la estacion destino2 random '%s'",
                         this.segundosDestinos[idFurgoneta]));
+            } else {
+                this.segundosDestinos[idFurgoneta] = -1;
+                System.out.println(String.format("Asignada la estacion destino2 random '%s'", -1));
             }
         } else {
             this.segundosDestinos[idFurgoneta] = -1;
@@ -207,7 +219,7 @@ public class Solution {
                     this.segundosDestinos[idFurgoneta]));
             idEstacionDestinoRandom = random.nextInt(idEstacionRandom);
             System.out.println(String.format("Asignando la estacion destino1 random '%s'", idEstacionDestinoRandom));
-            if (idEstacionDestinoRandom != idEstacionRandom) {
+            if ((idEstacionDestinoRandom != idEstacionRandom) && (idEstacionDestinoRandom != this.asignaciones[idFurgoneta])) {
                 this.primerosDestinos[idFurgoneta] = idEstacionDestinoRandom;
             } else {
                 this.primerosDestinos[idFurgoneta] = -1;
@@ -238,27 +250,37 @@ public class Solution {
                 System.out.println(String.format("Asignadas '%s' bicis al destino1",
                         this.primerasBicisDejadas[idFurgoneta]));
 
-                obtenerBeneficiosPorAciertos(numBicisDemandadasDestino, numBicisDisponiblesDestino, cargaRandom);
+                if (cargaRandom == 0) {
+                    this.primerosDestinos[idFurgoneta] = -1;
+                } else {
+                    obtenerBeneficiosPorAciertos(numBicisDemandadasDestino, numBicisDisponiblesDestino, cargaRandom);
 
-                numBicisDisponiblesEstacionOrigen = penalizarCostePorFallos(numBicisDemandadasEstacionOrigen,
-                        numBicisDisponiblesEstacionOrigen, cargaRandom);
+                    numBicisDisponiblesEstacionOrigen = penalizarCostePorFallos(numBicisDemandadasEstacionOrigen,
+                            numBicisDisponiblesEstacionOrigen, cargaRandom);
+                }
 
                 int idEstacionDestino2 = this.segundosDestinos[idFurgoneta];
                 if (idEstacionDestino2 != -1) {
+                    numBicisDemandadasDestino = this.estaciones.get(idEstacionDestino2).getDemanda();
+                    numBicisDisponiblesDestino = this.estaciones.get(idEstacionDestino2).getNumBicicletasNext();
                     bicisDisponiblesParaCargar -= cargaRandom;
                     System.out.println(String.format("Asignando una carga entre 0 y '%s'", bicisDisponiblesParaCargar));
                     if (bicisDisponiblesParaCargar > 0) {
                         cargaRandom = random.nextInt(bicisDisponiblesParaCargar);
                         this.segundasBicisDejadas[idFurgoneta] = cargaRandom;
                     } else {
+                        cargaRandom = 0;
                         this.segundasBicisDejadas[idFurgoneta] = 0;
                     }
                     System.out.println(String.format("Asignadas '%s' bicis al destino2",
                             this.segundasBicisDejadas[idFurgoneta]));
-
-                    penalizarCostePorFallos(numBicisDemandadasEstacionOrigen, numBicisDisponiblesEstacionOrigen,
-                            cargaRandom);
-
+                    if (cargaRandom == 0) {
+                        this.segundosDestinos[idFurgoneta] = -1;
+                    } else {
+                        obtenerBeneficiosPorAciertos(numBicisDemandadasDestino, numBicisDisponiblesDestino, cargaRandom);
+                        penalizarCostePorFallos(numBicisDemandadasEstacionOrigen, numBicisDisponiblesEstacionOrigen,
+                                cargaRandom);
+                    }
                 } else {
                     System.out.println("No tiene un segundo destino");
                     this.segundasBicisDejadas[idFurgoneta] = 0;
@@ -268,6 +290,11 @@ public class Solution {
                 this.primerasBicisDejadas[idFurgoneta] = 0;
                 this.segundasBicisDejadas[idFurgoneta] = 0;
             }
+
+            if ((this.primerosDestinos[idFurgoneta] == -1) && (this.segundosDestinos[idFurgoneta] != -1)) {
+                this.primerosDestinos[idFurgoneta] = this.segundosDestinos[idFurgoneta];
+                this.segundosDestinos[idFurgoneta] = -1;
+            }
         }
     }
 
@@ -275,7 +302,7 @@ public class Solution {
                                         int cargaRandom) { // O(1)
         System.out.println("Penalizamos fallos");
         boolean existeDeficitAntesDeCargar = (numBicisDemandadasEstacionOrigen > numBicisDisponiblesEstacionOrigen);
-        boolean existeDeficitDespuesDeCargar = (numBicisDemandadasEstacionOrigen > numBicisDisponiblesEstacionOrigen + cargaRandom);
+        boolean existeDeficitDespuesDeCargar = (numBicisDemandadasEstacionOrigen > numBicisDisponiblesEstacionOrigen - cargaRandom);
         System.out.println(String.format("Num bicis demandadas = '%s'", numBicisDemandadasEstacionOrigen));
         System.out.println(String.format("Num bicis disponibles = '%s'", numBicisDisponiblesEstacionOrigen));
         if (existeDeficitAntesDeCargar) {
@@ -308,6 +335,66 @@ public class Solution {
             System.out.println(String.format("Beneficio por acierto = '%s'", (numBicisDemandadasDestino - numBicisDisponiblesDestino)));
         } else {
             System.out.println("No hay beneficios obtenidos");
+        }
+    }
+
+    private void calcularCosteTransporte(int idFurgoneta) { // O(1)
+        int idOrigen = this.asignaciones[idFurgoneta];
+        int idDestino1 = this.primerosDestinos[idFurgoneta];
+        int idDestino2 = this.segundosDestinos[idFurgoneta];
+        System.out.println(String.format("Estacion origen = '%s'", idOrigen));
+        System.out.println(String.format("Destino1 = '%s'", idDestino1));
+        System.out.println(String.format("Destino2 = '%s'", idDestino2));
+        if ((idOrigen != -1) && (idDestino1 != -1)) {
+            System.out.println(String.format("Calculo del coste de transporte del primer destino:"));
+            Estacion estacionOrigen = this.estaciones.get(idOrigen);
+            int ix = estacionOrigen.getCoordX();
+            int iy = estacionOrigen.getCoordY();
+            System.out.println(String.format("ix = '%s'", ix));
+            System.out.println(String.format("iy = '%s'", iy));
+            Estacion estacionDestino1 = this.estaciones.get(idDestino1);
+            int jx = estacionDestino1.getCoordX();
+            int jy = estacionDestino1.getCoordY();
+            System.out.println(String.format("jx = '%s'", jx));
+            System.out.println(String.format("jy = '%s'", jy));
+
+            double distanciaEnMetros = Math.abs(ix - jx) + Math.abs(iy - jy);
+            System.out.println(String.format("Distancia(metros) = '%s'", distanciaEnMetros));
+
+            int cargaTotalBicis = this.primerasBicisDejadas[idFurgoneta];
+
+            if (idDestino2 != -1) {
+                cargaTotalBicis += this.segundasBicisDejadas[idFurgoneta];
+            }
+            System.out.println(String.format("Carga total bicis = '%s'", cargaTotalBicis));
+
+            double coste = ((double) (cargaTotalBicis + 9) / 10); // euros/km
+            System.out.println(String.format("Coste primer destino = '%s'", coste));
+
+            this.costeTransporte += (coste * (distanciaEnMetros / 1000));
+            System.out.println(String.format("Coste de transporte total anadido = '%s'", (coste * (distanciaEnMetros / 1000))));
+
+            if (idDestino2 != -1) {
+                System.out.println(String.format("Calculo del coste de transporte del segundo destino:"));
+                Estacion estacionDestino2 = this.estaciones.get(idDestino2);
+                int kx = estacionDestino2.getCoordX();
+                int ky = estacionDestino2.getCoordY();
+                System.out.println(String.format("kx = '%s'", kx));
+                System.out.println(String.format("ky = '%s'", ky));
+
+                distanciaEnMetros = Math.abs(jx - kx) + Math.abs(jy - ky);
+                System.out.println(String.format("Distancia(metros) = '%s'", distanciaEnMetros));
+
+                cargaTotalBicis -= this.primerasBicisDejadas[idFurgoneta];
+                System.out.println(String.format("Carga total bicis = '%s'", cargaTotalBicis));
+
+
+                coste = ((double) (cargaTotalBicis + 9) / 10); // euros/km
+                System.out.println(String.format("Coste primer destino = '%s'", coste));
+
+                this.costeTransporte += (coste * (distanciaEnMetros / 1000));
+                System.out.println(String.format("Coste de transporte total anadido = '%s'", (coste * (distanciaEnMetros / 1000))));
+            }
         }
     }
 }

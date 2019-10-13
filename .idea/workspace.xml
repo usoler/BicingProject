@@ -2,50 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2ff90e44-3912-4411-8f2a-fd0040f194bf" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/$PRODUCT_WORKSPACE_FILE$" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/BicingProject.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/java/BicingGoalTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BicingGoalTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/java/BicingHeuristicFunction1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BicingHeuristicFunction1.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/java/BicingHeuristicFunction2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BicingHeuristicFunction2.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/java/BicingProblem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BicingProblem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/java/BicingSolution.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BicingSolution.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/java/BicingSuccessorFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BicingSuccessorFunction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/java/Problem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Problem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/java/Solution.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Solution.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/java/TipoDemanda.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/TipoDemanda.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/resources/Bicing.zip" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/Bicing.zip" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/resources/busqueda-local-19201q.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/busqueda-local-19201q.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/resources/dist/Bicing.jar" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/dist/Bicing.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/resources/dist/javadoc/IA/Bicing/Estacion.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/dist/javadoc/IA/Bicing/Estacion.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/resources/dist/javadoc/IA/Bicing/Estaciones.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/dist/javadoc/IA/Bicing/Estaciones.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/resources/dist/javadoc/IA/Bicing/TestBicing.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/dist/javadoc/IA/Bicing/TestBicing.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/resources/dist/javadoc/IA/Bicing/package-frame.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/dist/javadoc/IA/Bicing/package-frame.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/resources/dist/javadoc/IA/Bicing/package-summary.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/dist/javadoc/IA/Bicing/package-summary.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/resources/dist/javadoc/IA/Bicing/package-tree.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/dist/javadoc/IA/Bicing/package-tree.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/resources/dist/javadoc/allclasses-frame.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/dist/javadoc/allclasses-frame.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/resources/dist/javadoc/allclasses-noframe.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/dist/javadoc/allclasses-noframe.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/resources/dist/javadoc/constant-values.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/dist/javadoc/constant-values.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/resources/dist/javadoc/deprecated-list.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/dist/javadoc/deprecated-list.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/resources/dist/javadoc/help-doc.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/dist/javadoc/help-doc.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/resources/dist/javadoc/index-files/index-1.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/dist/javadoc/index-files/index-1.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/resources/dist/javadoc/index-files/index-2.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/dist/javadoc/index-files/index-2.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/resources/dist/javadoc/index-files/index-3.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/dist/javadoc/index-files/index-3.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/resources/dist/javadoc/index-files/index-4.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/dist/javadoc/index-files/index-4.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/resources/dist/javadoc/index-files/index-5.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/dist/javadoc/index-files/index-5.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/resources/dist/javadoc/index-files/index-6.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/dist/javadoc/index-files/index-6.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/resources/dist/javadoc/index-files/index-7.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/dist/javadoc/index-files/index-7.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/resources/dist/javadoc/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/dist/javadoc/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/resources/dist/javadoc/overview-tree.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/dist/javadoc/overview-tree.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/resources/dist/javadoc/package-list" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/dist/javadoc/package-list" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/resources/dist/javadoc/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/dist/javadoc/script.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/resources/dist/javadoc/serialized-form.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/dist/javadoc/serialized-form.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/IA/resources/dist/javadoc/stylesheet.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/dist/javadoc/stylesheet.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Problem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Problem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Solution.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Solution.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
