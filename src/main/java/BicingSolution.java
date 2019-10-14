@@ -123,7 +123,7 @@ public class BicingSolution {
      * @param idEstacionFinal id de la estacion a la que mover la furgoneta
      */
     public boolean moverFurgoneta(int idFurgoneta, int idEstacionFinal) {
-        if (puedeMoverFurgoneta(idFurgoneta, idEstacionFinal)) { // TODO: FIX 2 furgonetas pueden estar en el mismo origen
+        if (puedeMoverFurgoneta(idFurgoneta, idEstacionFinal)) {
             int cargaFurgoneta = this.primerasBicisDejadas[idFurgoneta] + this.segundasBicisDejadas[idFurgoneta];
             deshacerCalculoCosteTransporte(idFurgoneta);
             recalcularBeneficios(idFurgoneta, cargaFurgoneta, idEstacionFinal);

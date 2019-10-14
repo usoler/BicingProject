@@ -59,7 +59,9 @@ public class BicingSuccessorFunction implements SuccessorFunction {
 
     private boolean[] calcularEstacionesOcupadas(boolean[] estacionesOcupadas, int[] asignaciones) { // O(|F|)
         for (int i = 0; i < asignaciones.length; ++i) {
-            estacionesOcupadas[asignaciones[i]] = true;
+            if (asignaciones[i] != -1) {
+                estacionesOcupadas[asignaciones[i]] = true;
+            }
         }
 
         return estacionesOcupadas;
