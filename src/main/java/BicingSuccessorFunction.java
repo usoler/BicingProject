@@ -15,19 +15,19 @@ public class BicingSuccessorFunction implements SuccessorFunction {
         int numFurgonetas = solution.getAsignaciones().length;
         int numEstaciones = solution.getEstaciones().size();
 
-        boolean[] estacionesOcupadas = new boolean[numEstaciones];
-        estacionesOcupadas = calcularEstacionesOcupadas(estacionesOcupadas, solution.getAsignaciones()); // O(F)
+//        boolean[] estacionesOcupadas = new boolean[numEstaciones];
+//        estacionesOcupadas = calcularEstacionesOcupadas(estacionesOcupadas, solution.getAsignaciones()); // O(F)
 
         for (int i = 0; i < numFurgonetas; ++i) { // O(|F|) * O(|F| + |E|)
             // Sucesores generados por el operador 'moverFurgoneta'
-            for (int j = 0; j < numEstaciones; ++j) { // O(|E|)
-                BicingSolution nuevaSolution = new BicingSolution(solution);
-                if ((!estacionesOcupadas[j]) && (nuevaSolution.moverFurgoneta(i, j))) { // O(1)
-                    String actionMessage = String.format("Furgoneta con id = '%s' movida a estacion con id = '%s'",
-                            i, j);
-                    successors.add(new Successor(actionMessage, nuevaSolution));
-                }
-            }
+          //  for (int j = 0; j < numEstaciones; ++j) { // O(|E|)
+            //    BicingSolution nuevaSolution = new BicingSolution(solution);
+              //  if ((!estacionesOcupadas[j]) && (nuevaSolution.moverFurgoneta(i, j))) { // O(1)
+                //    String actionMessage = String.format("Furgoneta con id = '%s' movida a estacion con id = '%s'",
+                  //          i, j);
+                  //  successors.add(new Successor(actionMessage, nuevaSolution));
+                //}
+           // }
 
 //            // Sucesores generados por el operador 'cambiarEstacionDestino'
 //            for (int j = 0; j < numEstaciones; ++j) { // O(|E|)
