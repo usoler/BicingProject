@@ -39,13 +39,7 @@ public class BicingSolution {
     public BicingSolution(int numEstaciones, int numBicisTotal, int numFurgonetas, TipoDemanda tipoDemanda, int semilla) {
         this.estaciones = new Estaciones(numEstaciones, numBicisTotal, TipoDemanda.getCode(tipoDemanda), semilla);
 
-        this.asignaciones = new int[numFurgonetas];
-
-        this.primerosDestinos = new int[numFurgonetas];
-        this.segundosDestinos = new int[numFurgonetas];
-
-        this.primerasBicisDejadas = new int[numFurgonetas];
-        this.segundasBicisDejadas = new int[numFurgonetas];
+        initArraysWith(numFurgonetas);
 
         this.beneficios = 0;
         this.costeTransporte = 0.0;
@@ -56,24 +50,13 @@ public class BicingSolution {
      *
      * @param solution solucion a copiar
      */
-    public BicingSolution(BicingSolution solution) { // TODO: Refactor code
+    public BicingSolution(BicingSolution solution) {
         this.estaciones = solution.getEstaciones();
 
         int numFurgonetas = solution.getAsignaciones().length;
 
-        this.asignaciones = new int[numFurgonetas];
-
-        this.primerosDestinos = new int[numFurgonetas];
-        this.segundosDestinos = new int[numFurgonetas];
-
-        this.primerasBicisDejadas = new int[numFurgonetas];
-        this.segundasBicisDejadas = new int[numFurgonetas];
-
-        System.arraycopy(solution.getAsignaciones(), 0, this.asignaciones, 0, solution.getAsignaciones().length);
-        System.arraycopy(solution.getPrimerosDestinos(), 0, this.primerosDestinos, 0, solution.getPrimerosDestinos().length);
-        System.arraycopy(solution.getSegundosDestinos(), 0, this.segundosDestinos, 0, solution.getSegundosDestinos().length);
-        System.arraycopy(solution.getPrimerasBicisDejadas(), 0, this.primerasBicisDejadas, 0, solution.getPrimerasBicisDejadas().length);
-        System.arraycopy(solution.getSegundasBicisDejadas(), 0, this.segundasBicisDejadas, 0, solution.getSegundasBicisDejadas().length);
+        initArraysWith(numFurgonetas);
+        copyArraysFrom(solution);
 
         this.beneficios = new Integer(solution.getBeneficios());
         this.costeTransporte = new Double(solution.getCosteTransporte());
@@ -124,11 +107,19 @@ public class BicingSolution {
      */
     public boolean moverFurgoneta(int idFurgoneta, int idEstacionFinal) {
         if (puedeMoverFurgoneta(idFurgoneta, idEstacionFinal)) {
-            int cargaFurgoneta = this.primerasBicisDejadas[idFurgoneta] + this.segundasBicisDejadas[idFurgoneta];
-            deshacerCalculoCosteTransporte(idFurgoneta);
-            recalcularBeneficios(idFurgoneta, cargaFurgoneta, idEstacionFinal);
-            this.asignaciones[idFurgoneta] = idEstacionFinal;
-            calcularCosteTransporte(idFurgoneta);
+            if (this.asignaciones[idFurgoneta] == -1) { // Simplemente coloca la furgoneta en la posicion origen final
+                Random random = new Random();                       // TODO: eliminar
+                this.asignaciones[idFurgoneta] = idEstacionFinal;
+                asignarDestinos(idFurgoneta, random);               // TODO: cambiar a ningun destino (obtiene destinos mediante operador)
+                asignarCargaDestinos(idFurgoneta, random);          // TODO: cambiar a ninguna carga (obtiene carga mediante operador)
+                calcularCosteTransporte(idFurgoneta);               // TODO: eliminar
+            } else { // en caso de ya tener asignada una posicion de origen
+                int cargaFurgoneta = this.primerasBicisDejadas[idFurgoneta] + this.segundasBicisDejadas[idFurgoneta];
+                deshacerCalculoCosteTransporte(idFurgoneta);
+                recalcularBeneficios(idFurgoneta, cargaFurgoneta, idEstacionFinal);
+                this.asignaciones[idFurgoneta] = idEstacionFinal;
+                calcularCosteTransporte(idFurgoneta);
+            }
 
             return true;
         }
@@ -542,5 +533,23 @@ public class BicingSolution {
                 System.out.println(String.format("Coste de transporte total anadido = '%s'", (coste * (distanciaEnMetros / 1000))));
             }
         }
+    }
+
+    private void initArraysWith(int numFurgonetas) { // O(1)
+        this.asignaciones = new int[numFurgonetas];
+
+        this.primerosDestinos = new int[numFurgonetas];
+        this.segundosDestinos = new int[numFurgonetas];
+
+        this.primerasBicisDejadas = new int[numFurgonetas];
+        this.segundasBicisDejadas = new int[numFurgonetas];
+    }
+
+    private void copyArraysFrom(BicingSolution solution) { // O(1)
+        System.arraycopy(solution.getAsignaciones(), 0, this.asignaciones, 0, solution.getAsignaciones().length);
+        System.arraycopy(solution.getPrimerosDestinos(), 0, this.primerosDestinos, 0, solution.getPrimerosDestinos().length);
+        System.arraycopy(solution.getSegundosDestinos(), 0, this.segundosDestinos, 0, solution.getSegundosDestinos().length);
+        System.arraycopy(solution.getPrimerasBicisDejadas(), 0, this.primerasBicisDejadas, 0, solution.getPrimerasBicisDejadas().length);
+        System.arraycopy(solution.getSegundasBicisDejadas(), 0, this.segundasBicisDejadas, 0, solution.getSegundasBicisDejadas().length);
     }
 }
