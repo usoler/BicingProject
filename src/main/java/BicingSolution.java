@@ -160,7 +160,29 @@ public class BicingSolution {
      * @param idFurgoneta2 id de la segunda furgoneta a intercambiar
      */
     public boolean intercambiarFurgonetas(int idFurgoneta1, int idFurgoneta2) {
-        // Empty
+        if (puedeIntercambiarFurgonetas(idFurgoneta1, idFurgoneta2)) {
+            int cargaFurgoneta1 = this.primerasBicisDejadas[idFurgoneta1] + this.segundasBicisDejadas[idFurgoneta1];
+            int cargaFurgoneta2 = this.primerasBicisDejadas[idFurgoneta2] + this.segundasBicisDejadas[idFurgoneta2];
+
+            deshacerCalculoCosteTransporte(idFurgoneta1);
+            deshacerCalculoCosteTransporte(idFurgoneta2);
+
+            int idEstacionFurgoneta1 = this.asignaciones[idFurgoneta1];
+            int idEstacionFurgoneta2 = this.asignaciones[idFurgoneta2];
+
+            recalcularBeneficios(idFurgoneta1, cargaFurgoneta1, idEstacionFurgoneta2);
+            recalcularBeneficios(idFurgoneta2, cargaFurgoneta2, idEstacionFurgoneta1);
+
+            this.asignaciones[idFurgoneta1] = idEstacionFurgoneta2;
+            this.asignaciones[idFurgoneta2] = idEstacionFurgoneta1;
+
+
+
+            calcularCosteTransporte(idFurgoneta1);
+            calcularCosteTransporte(idFurgoneta2);
+
+            return true;
+        }
         return false;
     }
 
@@ -462,6 +484,17 @@ public class BicingSolution {
         int bicisDisponiblesEstacionFinal = this.estaciones.get(idEstacionFinal).getNumBicicletasNext();
 
         return ((idEstacionFinal != idEstacionOrigenActual) && (cargaFurgoneta <= bicisDisponiblesEstacionFinal));
+    }
+
+    private boolean puedeIntercambiarFurgonetas(int idFurgoneta1, int idFurgoneta2) {
+        int idEstacionFurgoneta1 = this.asignaciones[idFurgoneta1];
+        int idEstacionFurgoneta2 = this.asignaciones[idFurgoneta2];
+        int cargaFurgoneta1 = this.primerasBicisDejadas[idFurgoneta1] + this.segundasBicisDejadas[idFurgoneta1];
+        int cargaFurgoneta2 = this.primerasBicisDejadas[idFurgoneta2] + this.segundasBicisDejadas[idFurgoneta2];
+        int bicisDisponiblesEstacionFurgoneta1 = this.estaciones.get(idEstacionFurgoneta1).getNumBicicletasNext();
+        int bicisDisponiblesEstacionFurgoneta2 = this.estaciones.get(idEstacionFurgoneta2).getNumBicicletasNext();
+
+        return ((cargaFurgoneta1 <= bicisDisponiblesEstacionFurgoneta2) && (cargaFurgoneta2 <= bicisDisponiblesEstacionFurgoneta1));
     }
 
     private void recalcularBeneficios(int idFurgoneta, int cargaFurgoneta, int idEstacionFinal) {

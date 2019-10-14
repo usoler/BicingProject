@@ -41,15 +41,15 @@ public class BicingSuccessorFunction implements SuccessorFunction {
 //                }
 //            }
 //
-//            // Sucesores generados por el operador 'intercambiarFurgonetas'
-//            for (int j = i + 1; j < numFurgonetas; ++j) { // O(|F|)
-//                BicingSolution nuevaSolution = new BicingSolution(solution);
-//                if (nuevaSolution.intercambiarFurgonetas(i, j)) {
-//                    String actionMessage = String.format("Furgoneta con id = '%s' intercambiada por furgoneta " +
-//                            "con id = '%s'", i, j);
-//                    successors.add(new Successor(actionMessage, nuevaSolution));
-//                }
-//            }
+            // Sucesores generados por el operador 'intercambiarFurgonetas'
+            for (int j = i + 1; j < numFurgonetas; ++j) { // O(|F|)
+                BicingSolution nuevaSolution = new BicingSolution(solution);
+                if (nuevaSolution.intercambiarFurgonetas(i, j)) {
+                    String actionMessage = String.format("Furgoneta con id = '%s' intercambiada por furgoneta " +
+                            "con id = '%s'", i, j);
+                    successors.add(new Successor(actionMessage, nuevaSolution));
+                }
+            }
         }
 
         printSuccessors(successors);
