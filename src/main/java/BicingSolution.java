@@ -164,18 +164,31 @@ public class BicingSolution {
             int cargaFurgoneta1 = this.primerasBicisDejadas[idFurgoneta1] + this.segundasBicisDejadas[idFurgoneta1];
             int cargaFurgoneta2 = this.primerasBicisDejadas[idFurgoneta2] + this.segundasBicisDejadas[idFurgoneta2];
 
-            deshacerCalculoCosteTransporte(idFurgoneta1);
-            deshacerCalculoCosteTransporte(idFurgoneta2);
-
             int idEstacionFurgoneta1 = this.asignaciones[idFurgoneta1];
             int idEstacionFurgoneta2 = this.asignaciones[idFurgoneta2];
+
+            if(idEstacionFurgoneta1 == -1){
+                this.primerosDestinos[idEstacionFurgoneta2] = -1;
+                this.segundosDestinos[idEstacionFurgoneta2] = -1;
+                this.primerasBicisDejadas[idEstacionFurgoneta2] = 0;
+                this.segundasBicisDejadas[idEstacionFurgoneta2] = 0;
+                deshacerCalculoCosteTransporte(idFurgoneta2);
+            } else if(idEstacionFurgoneta2 == -1){
+                this.primerosDestinos[idEstacionFurgoneta1] = -1;
+                this.segundosDestinos[idEstacionFurgoneta1] = -1;
+                this.primerasBicisDejadas[idEstacionFurgoneta1] = 0;
+                this.segundasBicisDejadas[idEstacionFurgoneta1] = 0;
+                deshacerCalculoCosteTransporte(idFurgoneta1);
+            } else {
+                deshacerCalculoCosteTransporte(idFurgoneta1);
+                deshacerCalculoCosteTransporte(idFurgoneta2);
+            }
 
             recalcularBeneficios(idFurgoneta1, cargaFurgoneta1, idEstacionFurgoneta2);
             recalcularBeneficios(idFurgoneta2, cargaFurgoneta2, idEstacionFurgoneta1);
 
             this.asignaciones[idFurgoneta1] = idEstacionFurgoneta2;
             this.asignaciones[idFurgoneta2] = idEstacionFurgoneta1;
-
 
 
             calcularCosteTransporte(idFurgoneta1);
@@ -489,6 +502,7 @@ public class BicingSolution {
     private boolean puedeIntercambiarFurgonetas(int idFurgoneta1, int idFurgoneta2) {
         int idEstacionFurgoneta1 = this.asignaciones[idFurgoneta1];
         int idEstacionFurgoneta2 = this.asignaciones[idFurgoneta2];
+        if(idEstacionFurgoneta1 == -1 && idEstacionFurgoneta2 == -1) return false;
         int cargaFurgoneta1 = this.primerasBicisDejadas[idFurgoneta1] + this.segundasBicisDejadas[idFurgoneta1];
         int cargaFurgoneta2 = this.primerasBicisDejadas[idFurgoneta2] + this.segundasBicisDejadas[idFurgoneta2];
         int bicisDisponiblesEstacionFurgoneta1 = this.estaciones.get(idEstacionFurgoneta1).getNumBicicletasNext();
