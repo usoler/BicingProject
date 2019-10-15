@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="2ff90e44-3912-4411-8f2a-fd0040f194bf" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/BicingProblem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BicingProblem.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/BicingSolution.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BicingSolution.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/BicingSuccessorFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BicingSuccessorFunction.java" afterDir="false" />
     </list>
