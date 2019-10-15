@@ -41,25 +41,33 @@ public class BicingSuccessorFunction implements SuccessorFunction {
 //                }
 //            }
 //
-//            // Sucesores generados por el operador 'intercambiarFurgonetas'
-//            for (int j = i + 1; j < numFurgonetas; ++j) { // O(|F|)
-//                BicingSolution nuevaSolution = new BicingSolution(solution);
-//                if (nuevaSolution.intercambiarFurgonetas(i, j)) {
-//                    String actionMessage = String.format("Furgoneta con id = '%s' intercambiada por furgoneta " +
-//                            "con id = '%s'", i, j);
-//                    successors.add(new Successor(actionMessage, nuevaSolution));
-//                }
-//            }
+            // Sucesores generados por el operador 'intercambiarFurgonetas'
+            for (int j = i + 1; j < numFurgonetas; ++j) { // O(|F|)
+                BicingSolution nuevaSolution = new BicingSolution(solution);
+                if (nuevaSolution.intercambiarFurgonetas(i, j)) {
+                    String actionMessage = String.format("Furgoneta con id = '%s' intercambiada por furgoneta " +
+                            "con id = '%s'", i, j);
+                    successors.add(new Successor(actionMessage, nuevaSolution));
+                }
+            }
         }
 
         printSuccessors(successors);
+
+        System.out.println("--------------------------------------------------------");
+        System.out.println("--------------------------------------------------------");
+        System.out.println(String.format("Numero de sucesores: %s", successors.size()));
+        System.out.println("--------------------------------------------------------");
+        System.out.println("--------------------------------------------------------");
 
         return successors;
     }
 
     private boolean[] calcularEstacionesOcupadas(boolean[] estacionesOcupadas, int[] asignaciones) { // O(|F|)
         for (int i = 0; i < asignaciones.length; ++i) {
-            estacionesOcupadas[asignaciones[i]] = true;
+            if (asignaciones[i] != -1) {
+                estacionesOcupadas[asignaciones[i]] = true;
+            }
         }
 
         return estacionesOcupadas;
@@ -74,7 +82,6 @@ public class BicingSuccessorFunction implements SuccessorFunction {
             System.out.println(String.format("Beneficios sucesor: '%s'", solution.getBeneficios()));
             System.out.println(String.format("Coste transporte sucesor: '%s'", solution.getCosteTransporte()));
             System.out.println("***********************************");
-
         }
     }
 }
