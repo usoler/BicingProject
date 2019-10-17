@@ -116,7 +116,7 @@ public class BicingSolution {
             } else { // en caso de ya tener asignada una posicion de origen
                 int cargaFurgoneta = this.primerasBicisDejadas[idFurgoneta] + this.segundasBicisDejadas[idFurgoneta];
                 deshacerCalculoCosteTransporte(idFurgoneta);
-                recalcularBeneficios(idFurgoneta, cargaFurgoneta, idEstacionFinal);
+                recalcularCostePorFallos(idFurgoneta, cargaFurgoneta, idEstacionFinal);
                 this.asignaciones[idFurgoneta] = idEstacionFinal;
                 calcularCosteTransporte(idFurgoneta);
             }
@@ -137,8 +137,42 @@ public class BicingSolution {
      * @param destinoActual          destino a cambiar: 0 para el primer destino, 1 para el segundo destino
      * @param idEstacionDestinoFinal id de la estación destino final
      */
-    public boolean cambiarEstacionDestino(int idFurgoneta, int destinoActual, int idEstacionDestinoFinal) {
-        // Empty
+    public boolean cambiarEstacionDestino(int idFurgoneta, int destinoActual, int idEstacionDestinoFinal) { // TODO: Refactor code
+        if (puedeCambiarEstacionDestino(idFurgoneta, destinoActual, idEstacionDestinoFinal)) {
+            // HAPPY PATH
+            int numBicisDemandadasDestino = 0;
+            int numBicisDisponiblesDestino = 0;
+            int carga = 0;
+            if (destinoActual == 0) {
+                deshacerCalculoCosteTransporte(idFurgoneta);
+                if (this.primerosDestinos[idFurgoneta] != -1) {
+                    numBicisDemandadasDestino = this.estaciones.get(this.primerosDestinos[idFurgoneta]).getDemanda();
+                    numBicisDisponiblesDestino = this.estaciones.get(this.primerosDestinos[idFurgoneta]).getNumBicicletasNext();
+                    carga = this.primerasBicisDejadas[idFurgoneta];
+                    deshacerBeneficiosPorAciertos(numBicisDemandadasDestino, numBicisDisponiblesDestino, carga);
+                }
+                this.primerosDestinos[idFurgoneta] = idEstacionDestinoFinal;
+            } else {
+                deshacerCalculoCosteTransporte(idFurgoneta);
+                if (this.segundosDestinos[idFurgoneta] != -1) {
+                    numBicisDemandadasDestino = this.estaciones.get(this.segundosDestinos[idFurgoneta]).getDemanda();
+                    numBicisDisponiblesDestino = this.estaciones.get(this.segundosDestinos[idFurgoneta]).getNumBicicletasNext();
+                    carga = this.segundasBicisDejadas[idFurgoneta];
+                    deshacerBeneficiosPorAciertos(numBicisDemandadasDestino, numBicisDisponiblesDestino, carga);
+                }
+                this.segundosDestinos[idFurgoneta] = idEstacionDestinoFinal;
+            }
+
+            if (carga > 0) {
+                numBicisDemandadasDestino = this.estaciones.get(idEstacionDestinoFinal).getDemanda();
+                numBicisDisponiblesDestino = this.estaciones.get(idEstacionDestinoFinal).getNumBicicletasNext();
+                obtenerBeneficiosPorAciertos(numBicisDemandadasDestino, numBicisDisponiblesDestino, carga);
+            }
+
+            calcularCosteTransporte(idFurgoneta);
+
+            return true;
+        }
         return false;
     }
 
@@ -150,7 +184,11 @@ public class BicingSolution {
      * @param idFurgoneta1 id de la primera furgoneta a intercambiar
      * @param idFurgoneta2 id de la segunda furgoneta a intercambiar
      */
+<<<<<<< HEAD
     public boolean intercambiarFurgonetas(int idFurgoneta1, int idFurgoneta2) {
+=======
+    public boolean intercambiarFurgonetas(int idFurgoneta1, int idFurgoneta2) { // TODO: Refactor code
+>>>>>>> master
         if (puedeIntercambiarFurgonetas(idFurgoneta1, idFurgoneta2)) {
             int cargaFurgoneta1 = this.primerasBicisDejadas[idFurgoneta1] + this.segundasBicisDejadas[idFurgoneta1];
             int cargaFurgoneta2 = this.primerasBicisDejadas[idFurgoneta2] + this.segundasBicisDejadas[idFurgoneta2];
@@ -158,19 +196,38 @@ public class BicingSolution {
             int idEstacionFurgoneta1 = this.asignaciones[idFurgoneta1];
             int idEstacionFurgoneta2 = this.asignaciones[idFurgoneta2];
 
+<<<<<<< HEAD
             if(idEstacionFurgoneta1 == -1){
                 deshacerCalculoCosteTransporte(idFurgoneta2);
+=======
+            if ((idEstacionFurgoneta1 == -1) && (idEstacionFurgoneta2 != -1)) {
+                deshacerCalculoCosteTransporte(idFurgoneta2);
+                deshacerCalculoCostePorFallos(idFurgoneta2, cargaFurgoneta2);
+
+>>>>>>> master
                 this.primerosDestinos[idFurgoneta2] = -1;
                 this.segundosDestinos[idFurgoneta2] = -1;
                 this.primerasBicisDejadas[idFurgoneta2] = 0;
                 this.segundasBicisDejadas[idFurgoneta2] = 0;
+<<<<<<< HEAD
                 //recalcularBeneficios(idFurgoneta1, cargaFurgoneta1, idEstacionFurgoneta2); FIX: No se pueden recalcular beneficios si una de las estaciones es -1
             } else if(idEstacionFurgoneta2 == -1){
                 deshacerCalculoCosteTransporte(idFurgoneta1);
+=======
+
+                this.asignaciones[idFurgoneta1] = idEstacionFurgoneta2;
+                this.asignaciones[idFurgoneta2] = idEstacionFurgoneta1;
+
+            } else if ((idEstacionFurgoneta1 != -1) && (idEstacionFurgoneta2 == -1)) {
+                deshacerCalculoCosteTransporte(idFurgoneta1);
+                deshacerCalculoCostePorFallos(idFurgoneta1, cargaFurgoneta1);
+
+>>>>>>> master
                 this.primerosDestinos[idFurgoneta1] = -1;
                 this.segundosDestinos[idFurgoneta1] = -1;
                 this.primerasBicisDejadas[idFurgoneta1] = 0;
                 this.segundasBicisDejadas[idFurgoneta1] = 0;
+<<<<<<< HEAD
                 //recalcularBeneficios(idFurgoneta2, cargaFurgoneta2, idEstacionFurgoneta1); FIX: No se pueden recalcular beneficios
             } else {
                 deshacerCalculoCosteTransporte(idFurgoneta1);
@@ -190,6 +247,29 @@ public class BicingSolution {
 
             return true;
         }
+=======
+
+                this.asignaciones[idFurgoneta1] = idEstacionFurgoneta2;
+                this.asignaciones[idFurgoneta2] = idEstacionFurgoneta1;
+
+            } else { // Ambas estaciones tienen una estacion origen asignada
+                deshacerCalculoCosteTransporte(idFurgoneta1);
+                deshacerCalculoCosteTransporte(idFurgoneta2);
+
+                recalcularCostePorFallos(idFurgoneta1, cargaFurgoneta1, idEstacionFurgoneta2);
+                recalcularCostePorFallos(idFurgoneta2, cargaFurgoneta2, idEstacionFurgoneta1);
+
+                this.asignaciones[idFurgoneta1] = idEstacionFurgoneta2;
+                this.asignaciones[idFurgoneta2] = idEstacionFurgoneta1;
+
+                calcularCosteTransporte(idFurgoneta1);
+                calcularCosteTransporte(idFurgoneta2);
+            }
+
+            return true;
+        }
+
+>>>>>>> master
         return false;
     }
 
@@ -422,6 +502,18 @@ public class BicingSolution {
         }
     }
 
+    private void deshacerBeneficiosPorAciertos(int numBicisDemandadasDestino, int numBicisDisponiblesDestino,
+                                               int carga) {
+        boolean existeDeficitAntesDeDescargar = (numBicisDemandadasDestino > numBicisDisponiblesDestino);
+        boolean existeDeficitDespuesDeDescargar = (numBicisDemandadasDestino > numBicisDisponiblesDestino + carga);
+
+        if (existeDeficitAntesDeDescargar && existeDeficitDespuesDeDescargar) {
+            this.beneficios -= carga;
+        } else if (existeDeficitAntesDeDescargar && !(existeDeficitDespuesDeDescargar)) {
+            this.beneficios -= (numBicisDemandadasDestino - numBicisDisponiblesDestino);
+        }
+    }
+
     private void calcularCosteTransporte(int idFurgoneta) {         // O(1)
         int idOrigen = this.asignaciones[idFurgoneta];
         int idDestino1 = this.primerosDestinos[idFurgoneta];
@@ -493,6 +585,7 @@ public class BicingSolution {
         return ((idEstacionFinal != idEstacionOrigenActual) && (cargaFurgoneta <= bicisDisponiblesEstacionFinal));
     }
 
+<<<<<<< HEAD
     private boolean puedeIntercambiarFurgonetas(int idFurgoneta1, int idFurgoneta2) {
         int idEstacionFurgoneta1 = this.asignaciones[idFurgoneta1];
         int idEstacionFurgoneta2 = this.asignaciones[idFurgoneta2];
@@ -507,6 +600,51 @@ public class BicingSolution {
     }
 
     private void recalcularBeneficios(int idFurgoneta, int cargaFurgoneta, int idEstacionFinal) {
+=======
+    private boolean puedeCambiarEstacionDestino(int idFurgoneta, int destinoActual, int idEstacionDestinoFinal) {
+        int idEstacionOrigen = this.asignaciones[idFurgoneta];
+
+        if (idEstacionOrigen == -1) {
+            return false;
+        }
+
+        if (idEstacionOrigen == idEstacionDestinoFinal) {
+            return false;
+        }
+
+        if ((this.primerosDestinos[idFurgoneta] != -1) && (this.segundosDestinos[idFurgoneta] != -1)) {
+            if ((destinoActual == 0) && (idEstacionDestinoFinal == this.segundosDestinos[idFurgoneta])) {
+                return false;
+            }
+
+            if ((destinoActual == 1) && (idEstacionDestinoFinal == this.primerosDestinos[idFurgoneta])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private boolean puedeIntercambiarFurgonetas(int idFurgoneta1, int idFurgoneta2) {
+        int idEstacionFurgoneta1 = this.asignaciones[idFurgoneta1];
+        int idEstacionFurgoneta2 = this.asignaciones[idFurgoneta2];
+
+        if (idEstacionFurgoneta1 == -1 && idEstacionFurgoneta2 == -1) {
+            return false;
+        } else if (idEstacionFurgoneta1 == -1 || idEstacionFurgoneta2 == -1) {
+            return true;
+        } else {
+            int cargaFurgoneta1 = this.primerasBicisDejadas[idFurgoneta1] + this.segundasBicisDejadas[idFurgoneta1];
+            int cargaFurgoneta2 = this.primerasBicisDejadas[idFurgoneta2] + this.segundasBicisDejadas[idFurgoneta2];
+            int bicisDisponiblesEstacionFinalFurgoneta1 = this.estaciones.get(idEstacionFurgoneta2).getNumBicicletasNext();
+            int bicisDisponiblesEstacionFinalFurgoneta2 = this.estaciones.get(idEstacionFurgoneta1).getNumBicicletasNext();
+
+            return ((cargaFurgoneta1 <= bicisDisponiblesEstacionFinalFurgoneta1) && (cargaFurgoneta2 <= bicisDisponiblesEstacionFinalFurgoneta2));
+        }
+    }
+
+    private void recalcularCostePorFallos(int idFurgoneta, int cargaFurgoneta, int idEstacionFinal) { // TODO: Refactor code
+>>>>>>> master
         // Devolver beneficios de la estacion actual
         Estacion estacion = this.estaciones.get(this.asignaciones[idFurgoneta]);
         int demandaEstacion = estacion.getDemanda();
@@ -524,6 +662,18 @@ public class BicingSolution {
         bicisLibres = estacion.getNumBicicletasNext();
 
         penalizarCostePorFallos(demandaEstacion, bicisLibres, cargaFurgoneta);
+    }
+
+    private void deshacerCalculoCostePorFallos(int idFurgoneta, int cargaFurgoneta) { // TODO: Refactor code
+        Estacion estacion = this.estaciones.get(this.asignaciones[idFurgoneta]);
+        int demandaEstacion = estacion.getDemanda();
+        int bicisLibres = estacion.getNumBicicletasNext();
+
+        if (demandaEstacion > bicisLibres) {
+            this.beneficios += cargaFurgoneta;
+        } else if (demandaEstacion > bicisLibres - cargaFurgoneta) {
+            this.beneficios += (demandaEstacion - bicisLibres + cargaFurgoneta);
+        } // else: no hubo penalizacion por fallo
     }
 
     private void deshacerCalculoCosteTransporte(int idFurgoneta) {         // O(1)

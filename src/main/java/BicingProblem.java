@@ -87,7 +87,7 @@ public class BicingProblem {
             SearchAgent agent = new SearchAgent(problem, search); // TODO: ignorar System.out.println para calcular el tiempo correctamente
             long endTime = System.currentTimeMillis();
 
-            System.out.println(String.format("Time = '%s' ms", (endTime-startTime)));
+            System.out.println(String.format("Time = '%s' ms", (endTime - startTime)));
 
             printActions(agent.getActions());
             printInstrumentation(agent.getInstrumentation());
