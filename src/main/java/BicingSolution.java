@@ -236,18 +236,44 @@ public class BicingSolution {
         return false;
     }
 
-    // TODO: Discutir que hacer con el tema de las bicis ????
-//    /**
-//     * Cargar furgoneta con id 'idFurgoneta' con 'numBicis' bicis
-//     * <p>
-//     * Factor ramificación: O(31 * F * F)
-//     *
-//     * @param idFurgoneta id de la furgoneta a la que cargar las bicis
-//     * @param numBicis    número de bicis que cargar
-//     */
-//    public void cargarFurgoneta(int idFurgoneta, int numBicis) {
-//        // Empty
-//    }
+    /**
+     * Cargar furgoneta con id 'idFurgoneta' con 'numBicis1'+'numBicis2' bicis
+     * <p>
+     * Factor ramificación: O(31 * F * F)
+     *
+     * @param idFurgoneta id de la furgoneta a la que cargar las bicis
+     * @param numBicis1    número de bicis que cargar para dejar en el primer destino
+     * @param numBicis2    número de bicis que cargar para dejar en el segundo destino
+     */
+    public boolean cargarFurgoneta(int idFurgoneta, int numBicis1, int numBicis2) {
+        if(puedeCargarFurgoneta(idFurgoneta,numBicis1,numBicis2)){
+            //Desfem tots els beneficis/costos:
+            int cargaActual = primerasBicisDejadas[idFurgoneta]+segundasBicisDejadas[idFurgoneta];
+            deshacerCalculoCostePorFallos(idFurgoneta, cargaActual);
+            deshacerBeneficiosPorAciertos(this.estaciones.get(primerosDestinos[idFurgoneta]).getDemanda(),
+                    this.estaciones.get(primerosDestinos[idFurgoneta]).getNumBicicletasNext(),primerasBicisDejadas[idFurgoneta]);
+            deshacerBeneficiosPorAciertos(this.estaciones.get(segundosDestinos[idFurgoneta]).getDemanda(),
+                    this.estaciones.get(segundosDestinos[idFurgoneta]).getNumBicicletasNext(), segundasBicisDejadas[idFurgoneta]);
+            deshacerCalculoCosteTransporte(idFurgoneta);
+
+            //Asignem la carga
+            primerasBicisDejadas[idFurgoneta] = numBicis1;
+            segundasBicisDejadas[idFurgoneta] = numBicis2;
+            int cargaNueva = numBicis1+numBicis2;
+
+            //Calculem nous beneficis/costos
+            penalizarCostePorFallos(this.estaciones.get(asignaciones[idFurgoneta]).getDemanda(),
+                    this.estaciones.get(asignaciones[idFurgoneta]).getNumBicicletasNext(), cargaNueva);
+            obtenerBeneficiosPorAciertos(this.estaciones.get(primerosDestinos[idFurgoneta]).getDemanda(),
+                    this.estaciones.get(primerosDestinos[idFurgoneta]).getNumBicicletasNext(), primerasBicisDejadas[idFurgoneta]);
+            obtenerBeneficiosPorAciertos(this.estaciones.get(segundosDestinos[idFurgoneta]).getDemanda(),
+                    this.estaciones.get(segundosDestinos[idFurgoneta]).getNumBicicletasNext(), segundasBicisDejadas[idFurgoneta]);
+            calcularCosteTransporte(idFurgoneta);
+            return true;
+        }
+        return false;
+
+    }
 
     // ------------------------------------------------------------------------
     // Getters
@@ -588,6 +614,14 @@ public class BicingSolution {
 
             return ((cargaFurgoneta1 <= bicisDisponiblesEstacionFinalFurgoneta1) && (cargaFurgoneta2 <= bicisDisponiblesEstacionFinalFurgoneta2));
         }
+    }
+
+    private boolean puedeCargarFurgoneta(int idFurgoneta, int numBicis1, int numBicis2) {
+        if(numBicis1+numBicis2>30 || numBicis1+numBicis2>this.estaciones.get(this.asignaciones[idFurgoneta]).getNumBicicletasNext())
+            return false;
+        if(primerosDestinos[idFurgoneta] == -1) return false;
+        if(segundosDestinos[idFurgoneta] == -1 && numBicis2 > 0) return false;
+        return true;
     }
 
     private void recalcularCostePorFallos(int idFurgoneta, int cargaFurgoneta, int idEstacionFinal) { // TODO: Refactor code

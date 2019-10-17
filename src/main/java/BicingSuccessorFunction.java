@@ -54,6 +54,19 @@ public class BicingSuccessorFunction implements SuccessorFunction {
                     successors.add(new Successor(actionMessage, nuevaSolution));
                 }
             }
+
+            //Sucesores generados por el operador 'cargarFurgoneta'
+            for (int j = 1; j < 30; ++j) { // O(|F|)
+                ++contadorEspacio;
+                BicingSolution nuevaSolution = new BicingSolution(solution);
+                for(int k = 1; k < 30; ++k) {
+                    if (nuevaSolution.cargarFurgoneta(i, j, k)){
+                        String actionMessage = String.format("Furgoneta con id = '%s' cargada con " +
+                                "'%s' bicis para el primer destino y '%s' para el segundo", i, j, k);
+                        successors.add(new Successor(actionMessage, nuevaSolution));
+                    }
+                }
+            }
         }
 
         printSuccessors(successors);
