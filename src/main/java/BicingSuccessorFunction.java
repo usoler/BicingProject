@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BicingSuccessorFunction implements SuccessorFunction {
-//    private static final int NUM_MAX_DESTINOS = 2;
+    private static final int NUM_MAX_DESTINOS = 2;
 
     @Override
     public List getSuccessors(Object state) {
@@ -17,10 +17,12 @@ public class BicingSuccessorFunction implements SuccessorFunction {
 
         boolean[] estacionesOcupadas = new boolean[numEstaciones];
         estacionesOcupadas = calcularEstacionesOcupadas(estacionesOcupadas, solution.getAsignaciones()); // O(F)
+        int contadorEspacio = 0;
 
         for (int i = 0; i < numFurgonetas; ++i) { // O(|F|) * O(|F| + |E|)
             // Sucesores generados por el operador 'moverFurgoneta'
             for (int j = 0; j < numEstaciones; ++j) { // O(|E|)
+                ++contadorEspacio;
                 BicingSolution nuevaSolution = new BicingSolution(solution);
                 if ((!estacionesOcupadas[j]) && (nuevaSolution.moverFurgoneta(i, j))) { // O(1)
                     String actionMessage = String.format("Furgoneta con id = '%s' movida a estacion con id = '%s'",
@@ -29,20 +31,22 @@ public class BicingSuccessorFunction implements SuccessorFunction {
                 }
             }
 
-//            // Sucesores generados por el operador 'cambiarEstacionDestino'
-//            for (int j = 0; j < numEstaciones; ++j) { // O(|E|)
-//                for (int k = 0; k < NUM_MAX_DESTINOS; ++k) {
-//                    BicingSolution nuevaSolution = new BicingSolution(solution);
-//                    if (nuevaSolution.cambiarEstacionDestino(i, k, j)) {
-//                        String actionMessage = String.format("Furgoneta con id = '%s' cambiado el destino '%s' " +
-//                                "al destino con id = '%s'", i, k + 1, j);
-//                        successors.add(new Successor(actionMessage, nuevaSolution));
-//                    }
-//                }
-//            }
-//
+            // Sucesores generados por el operador 'cambiarEstacionDestino'
+            for (int j = 0; j < numEstaciones; ++j) { // O(|E|)
+                for (int k = 0; k < NUM_MAX_DESTINOS; ++k) {
+                    ++contadorEspacio;
+                    BicingSolution nuevaSolution = new BicingSolution(solution);
+                    if (nuevaSolution.cambiarEstacionDestino(i, k, j)) {
+                        String actionMessage = String.format("Furgoneta con id = '%s', y origen '%s', cambiado el destino '%s' " +
+                                "al destino con id = '%s'", i, nuevaSolution.getAsignaciones()[i], k + 1, j);
+                        successors.add(new Successor(actionMessage, nuevaSolution));
+                    }
+                }
+            }
+
             // Sucesores generados por el operador 'intercambiarFurgonetas'
             for (int j = i + 1; j < numFurgonetas; ++j) { // O(|F|)
+                ++contadorEspacio;
                 BicingSolution nuevaSolution = new BicingSolution(solution);
                 if (nuevaSolution.intercambiarFurgonetas(i, j)) {
                     String actionMessage = String.format("Furgoneta con id = '%s' intercambiada por furgoneta " +
@@ -56,6 +60,7 @@ public class BicingSuccessorFunction implements SuccessorFunction {
 
         System.out.println("--------------------------------------------------------");
         System.out.println("--------------------------------------------------------");
+        System.out.println(String.format("Numero de espacio: %s", contadorEspacio));
         System.out.println(String.format("Numero de sucesores: %s", successors.size()));
         System.out.println("--------------------------------------------------------");
         System.out.println("--------------------------------------------------------");
