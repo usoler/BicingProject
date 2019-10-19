@@ -12,7 +12,8 @@ public class BicingProblem {
 
     public static void main(String[] args) {
         Random random = new Random();
-        int semilla = random.nextInt();
+//        int semilla = random.nextInt();
+        int semilla = 1234;
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Introduce el número de estaciones, el número de bicis, el número de furgonetas y el tipo " +
