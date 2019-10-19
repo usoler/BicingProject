@@ -1,6 +1,7 @@
 import IA.Bicing.Estacion;
 import IA.Bicing.Estaciones;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class BicingSolution {
@@ -88,6 +89,45 @@ public class BicingSolution {
                 asignarCargaDestinos(i, random);    // O(1)
                 calcularCosteTransporte(i);         // O(1)
             }
+        }
+    }
+
+    /**
+     * Genera una solucion inicial que distribuye las furgonetas disponibles entre las estaciones mas prosperas.
+     * Asigna a cada furgoneta entre 0 y 2 estaciones destino con deficit dentro de un radio de distancia de X km.
+     */
+    public void generadorSolucion2() {
+        int[] estacionesProsperas = initArrayEstacionesProsperas(); // Estaciones ordenadas de mas prospera a menos
+        mergeSort(estacionesProsperas, 0, this.estaciones.size() - 1, true); // O(|E|log|E|)
+
+        System.out.println("ESTACIONES PROSPERAS ORDENADAS");
+        for (int a = 0; a < estacionesProsperas.length; ++a) {
+            System.out.println(String.format("Posicion #%s:  estacion con id '%s'",
+                    a, estacionesProsperas[a]));
+        }
+
+        int[] estacionesDeficit = obtenerEstacionesConDeficit();
+        mergeSort(estacionesDeficit, 0, estacionesDeficit.length - 1, false); // O(|E|log|E|)
+
+        System.out.println("ESTACIONES CON DEFICIT ORDENADAS");
+        for (int b = 0; b < estacionesDeficit.length; ++b) {
+            System.out.println(String.format("Posicion #%s:  estacion con id '%s'",
+                    b, estacionesDeficit[b]));
+        }
+
+        for (int i = 0; i < this.asignaciones.length; ++i) {
+            asignarFurgonetaEnEstacionProspera(i, estacionesProsperas);
+
+//            asignarDestinosConDeficit(i);
+//            asignarCargaDestinosConDeficit(i);
+//            calcularCosteTransporte(i);
+
+        }
+
+        System.out.println("DISTRIBUCION FURGONETAS");
+        for (int j = 0; j < this.asignaciones.length; ++j) {
+            System.out.println(String.format("Furgoneta con id '%s' con id estacion origen '%s'",
+                    j, this.asignaciones[j]));
         }
     }
 
@@ -371,6 +411,16 @@ public class BicingSolution {
         System.out.println(String.format("Asignada la estacion origen random '%s'", this.asignaciones[idFurgoneta]));
 
         return estacionesAsignadas;
+    }
+
+    private void asignarFurgonetaEnEstacionProspera(int idFurgoneta, int[] estacionesProsperasAsignadas) {
+        System.out.println(String.format("Asignando a furgoneta con id '%s' la estacion con id '%s'",
+                idFurgoneta, estacionesProsperasAsignadas[idFurgoneta]));
+
+        this.asignaciones[idFurgoneta] = estacionesProsperasAsignadas[idFurgoneta];
+
+        System.out.println(String.format("Asignada a furgoneta con id '%s' la estacion con id '%s'",
+                idFurgoneta, this.asignaciones[idFurgoneta]));
     }
 
     private void asignarDestinos(int idFurgoneta, Random random) { // O(1)
@@ -763,11 +813,101 @@ public class BicingSolution {
         this.segundasBicisDejadas = new int[numFurgonetas];
     }
 
+    private int[] initArrayEstacionesProsperas() {
+        int[] array = new int[this.estaciones.size()];
+
+        for (int i = 0; i < array.length; ++i) {
+            array[i] = i;
+        }
+
+        return array;
+    }
+
     private void copyArraysFrom(BicingSolution solution) { // O(1)
         System.arraycopy(solution.getAsignaciones(), 0, this.asignaciones, 0, solution.getAsignaciones().length);
         System.arraycopy(solution.getPrimerosDestinos(), 0, this.primerosDestinos, 0, solution.getPrimerosDestinos().length);
         System.arraycopy(solution.getSegundosDestinos(), 0, this.segundosDestinos, 0, solution.getSegundosDestinos().length);
         System.arraycopy(solution.getPrimerasBicisDejadas(), 0, this.primerasBicisDejadas, 0, solution.getPrimerasBicisDejadas().length);
         System.arraycopy(solution.getSegundasBicisDejadas(), 0, this.segundasBicisDejadas, 0, solution.getSegundasBicisDejadas().length);
+    }
+
+    private void mergeSort(int[] array, int start, int end, boolean ordenProspero) { // O(nlogn)
+        if (start < end) {
+            int middle = (start + end) / 2;
+
+            mergeSort(array, start, middle, ordenProspero);
+            mergeSort(array, middle + 1, end, ordenProspero);
+
+            merge(array, start, middle, end, ordenProspero);
+        }
+    }
+
+    private void merge(int[] array, int start, int middle, int end, boolean ordenProspero) {
+        int size = end - start + 1;
+        int[] res = new int[size];
+
+        int i = start;
+        int j = middle + 1;
+        int k = 0;
+
+        while ((i <= middle) && (j <= end)) {
+            int idEstacion1 = array[i];
+            int idEstacion2 = array[j];
+            int demanda1 = this.estaciones.get(idEstacion1).getDemanda();
+            int demanda2 = this.estaciones.get(idEstacion2).getDemanda();
+            int bicisDisponibles1 = this.estaciones.get(idEstacion1).getNumBicicletasNext();
+            int bicisDisponibles2 = this.estaciones.get(idEstacion2).getNumBicicletasNext();
+
+            int evaluador1;
+            int evaluador2;
+            if (ordenProspero) {
+                evaluador1 = bicisDisponibles1 - demanda1;
+                evaluador2 = bicisDisponibles2 - demanda2;
+            } else {
+                evaluador1 = demanda1 - bicisDisponibles1;
+                evaluador2 = demanda2 - bicisDisponibles2;
+            }
+
+            if (evaluador1 >= evaluador2) {
+                res[k] = array[i];
+                ++i;
+            } else {
+                res[k] = array[j];
+                ++j;
+            }
+
+            ++k;
+        }
+
+        while (i <= middle) {
+            res[k] = array[i];
+            ++i;
+            ++k;
+        }
+
+        while (j <= end) {
+            res[k] = array[j];
+            ++j;
+            ++k;
+        }
+
+        for (k = 0; k < size; ++k) {
+            array[start + k] = res[k];
+        }
+    }
+
+    private int[] obtenerEstacionesConDeficit() { // O(|E|)
+        ArrayList<Integer> arrayList = new ArrayList<Integer>();
+
+        for (int i = 0; i < this.estaciones.size(); ++i) {
+            int demanda = this.estaciones.get(i).getDemanda();
+            int bicisDisponibles = this.estaciones.get(i).getNumBicicletasNext();
+
+            if (demanda > bicisDisponibles) { // tiene deficit
+                arrayList.add(i);
+            }
+        }
+
+        return arrayList.stream().mapToInt(i -> i).toArray();
     }
 }

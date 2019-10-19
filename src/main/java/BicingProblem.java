@@ -12,8 +12,8 @@ public class BicingProblem {
 
     public static void main(String[] args) {
         Random random = new Random();
-//        int semilla = random.nextInt();
-        int semilla = 1234;
+        int semilla = random.nextInt();
+//        int semilla = 1234;
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Introduce el número de estaciones, el número de bicis, el número de furgonetas y el tipo " +
@@ -42,14 +42,17 @@ public class BicingProblem {
         BicingSolution solucionInicial = new BicingSolution(numeroEstaciones, numeroBicisTotal, numeroFurgonetas, tipoDemanda,
                 semilla);
         System.out.println("EMPEZAMOS LA GENERACION");
-        solucionInicial.generadorSolucion1();
+//        solucionInicial.generadorSolucion1();
+        solucionInicial.generadorSolucion2();
         System.out.println("FINAL DE LA GENERACION");
         System.out.println("****************************************************");
-        System.out.println(String.format("BENEFICIOS - COSTE POR FALLOS: '%s'", solucionInicial.getBeneficios()));
-        System.out.println(String.format("COSTE POR TRANSPORTE: '%s'", solucionInicial.getCosteTransporte()));
-
-        BicingHillClimbingSearch(solucionInicial);
-        printCoords(solucionInicial);
+        printInfoEstaciones(solucionInicial);
+//        printBeneficiosMaximosPosibles(solucionInicial);
+//        System.out.println(String.format("BENEFICIOS - COSTE POR FALLOS: '%s'", solucionInicial.getBeneficios()));
+//        System.out.println(String.format("COSTE POR TRANSPORTE: '%s'", solucionInicial.getCosteTransporte()));
+//
+//        BicingHillClimbingSearch(solucionInicial);
+//        printCoords(solucionInicial);
     }
 
     private static void mostrarMenu() {
@@ -124,6 +127,32 @@ public class BicingProblem {
             int x = estaciones.get(i).getCoordX();
             int y = estaciones.get(i).getCoordY();
             System.out.println(String.format("x = '%s', y = '%s'", x, y));
+        }
+    }
+
+    private static void printBeneficiosMaximosPosibles(BicingSolution solution) {
+        Estaciones estaciones = solution.getEstaciones();
+        int beneficios = 0;
+        for (int i = 0; i < estaciones.size(); ++i) {
+            int demanda = estaciones.get(i).getDemanda();
+            int bicisDisponibles = estaciones.get(i).getNumBicicletasNext();
+            if (demanda > bicisDisponibles) {
+                beneficios += (demanda - bicisDisponibles);
+            }
+        }
+
+        System.out.println(String.format("BENEFICIOS POSIBLES A OBTENER: '%s'", beneficios));
+    }
+
+    private static void printInfoEstaciones(BicingSolution solution) {
+        Estaciones estaciones = solution.getEstaciones();
+        for (int i = 0; i < estaciones.size(); ++i) {
+            int demanda = estaciones.get(i).getDemanda();
+            int bicisDisponibles = estaciones.get(i).getNumBicicletasNext();
+
+            System.out.println(String.format("Estacion con id '%s'", i));
+            System.out.println(String.format("Demanda = '%s'", demanda));
+            System.out.println(String.format("BicisDisponibles = '%s'", bicisDisponibles));
         }
     }
 }
