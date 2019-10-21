@@ -6,6 +6,7 @@ import java.util.List;
 
 public class BicingSuccessorFunction implements SuccessorFunction {
     private static final int NUM_MAX_DESTINOS = 2;
+    private static final int NUM_MAX_BICIS = 30;
 
     @Override
     public List getSuccessors(Object state) {
@@ -55,6 +56,7 @@ public class BicingSuccessorFunction implements SuccessorFunction {
                 }
             }
 
+<<<<<<< HEAD
             //Sucesores generados por el operador 'cargarFurgoneta'
             for (int j = 1; j < 30; ++j) { // O(|F|)
                 ++contadorEspacio;
@@ -63,6 +65,16 @@ public class BicingSuccessorFunction implements SuccessorFunction {
                     if (nuevaSolution.cargarFurgoneta(i, j, k)){
                         String actionMessage = String.format("Furgoneta con id = '%s' cargada con " +
                                 "'%s' bicis para el primer destino y '%s' para el segundo", i, j, k);
+=======
+            // Sucesores generados por el operador 'cargarFurgoneta'
+            for (int j = 0; j <= NUM_MAX_BICIS; ++j) {
+                for (int k = 0; k <= NUM_MAX_BICIS; ++k) {
+                    ++contadorEspacio;
+                    BicingSolution nuevaSolution = new BicingSolution(solution);
+                    if (nuevaSolution.cargarFurgoneta(i, j, k)) {
+                        String actionMessage = String.format("Furgoneta con id = '%s' cargada con '%s' bicis " +
+                                "para el destino1 y '%s' para el destino2", i, j, k);
+>>>>>>> master
                         successors.add(new Successor(actionMessage, nuevaSolution));
                     }
                 }
