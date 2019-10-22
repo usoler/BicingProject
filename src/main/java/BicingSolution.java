@@ -242,11 +242,7 @@ public class BicingSolution {
      * @param idFurgoneta1 id de la primera furgoneta a intercambiar
      * @param idFurgoneta2 id de la segunda furgoneta a intercambiar
      */
-<<<<<<< HEAD
-    public boolean intercambiarFurgonetas(int idFurgoneta1, int idFurgoneta2) {
-=======
     public boolean intercambiarFurgonetas(int idFurgoneta1, int idFurgoneta2) { // TODO: Refactor code
->>>>>>> master
         if (puedeIntercambiarFurgonetas(idFurgoneta1, idFurgoneta2)) {
             int cargaFurgoneta1 = this.primerasBicisDejadas[idFurgoneta1] + this.segundasBicisDejadas[idFurgoneta1];
             int cargaFurgoneta2 = this.primerasBicisDejadas[idFurgoneta2] + this.segundasBicisDejadas[idFurgoneta2];
@@ -254,24 +250,14 @@ public class BicingSolution {
             int idEstacionFurgoneta1 = this.asignaciones[idFurgoneta1];
             int idEstacionFurgoneta2 = this.asignaciones[idFurgoneta2];
 
-<<<<<<< HEAD
-            if(idEstacionFurgoneta1 == -1){
-                deshacerCalculoCosteTransporte(idFurgoneta2);
-=======
             if ((idEstacionFurgoneta1 == -1) && (idEstacionFurgoneta2 != -1)) {
                 deshacerCalculoCosteTransporte(idFurgoneta2);
                 deshacerCalculoCostePorFallos(idFurgoneta2, cargaFurgoneta2);
 
->>>>>>> master
                 this.primerosDestinos[idFurgoneta2] = -1;
                 this.segundosDestinos[idFurgoneta2] = -1;
                 this.primerasBicisDejadas[idFurgoneta2] = 0;
                 this.segundasBicisDejadas[idFurgoneta2] = 0;
-<<<<<<< HEAD
-                //recalcularBeneficios(idFurgoneta1, cargaFurgoneta1, idEstacionFurgoneta2); FIX: No se pueden recalcular beneficios si una de las estaciones es -1
-            } else if(idEstacionFurgoneta2 == -1){
-                deshacerCalculoCosteTransporte(idFurgoneta1);
-=======
 
                 this.asignaciones[idFurgoneta1] = idEstacionFurgoneta2;
                 this.asignaciones[idFurgoneta2] = idEstacionFurgoneta1;
@@ -280,32 +266,10 @@ public class BicingSolution {
                 deshacerCalculoCosteTransporte(idFurgoneta1);
                 deshacerCalculoCostePorFallos(idFurgoneta1, cargaFurgoneta1);
 
->>>>>>> master
                 this.primerosDestinos[idFurgoneta1] = -1;
                 this.segundosDestinos[idFurgoneta1] = -1;
                 this.primerasBicisDejadas[idFurgoneta1] = 0;
                 this.segundasBicisDejadas[idFurgoneta1] = 0;
-<<<<<<< HEAD
-                //recalcularBeneficios(idFurgoneta2, cargaFurgoneta2, idEstacionFurgoneta1); FIX: No se pueden recalcular beneficios
-            } else {
-                deshacerCalculoCosteTransporte(idFurgoneta1);
-                deshacerCalculoCosteTransporte(idFurgoneta2);
-                recalcularBeneficios(idFurgoneta1, cargaFurgoneta1, idEstacionFurgoneta2);
-                recalcularBeneficios(idFurgoneta2, cargaFurgoneta2, idEstacionFurgoneta1);
-            }
-
-
-
-            this.asignaciones[idFurgoneta1] = idEstacionFurgoneta2;
-            this.asignaciones[idFurgoneta2] = idEstacionFurgoneta1;
-
-
-            calcularCosteTransporte(idFurgoneta1);
-            calcularCosteTransporte(idFurgoneta2);
-
-            return true;
-        }
-=======
 
                 this.asignaciones[idFurgoneta1] = idEstacionFurgoneta2;
                 this.asignaciones[idFurgoneta2] = idEstacionFurgoneta1;
@@ -327,7 +291,6 @@ public class BicingSolution {
             return true;
         }
 
->>>>>>> master
         return false;
     }
 
@@ -827,22 +790,6 @@ public class BicingSolution {
         return ((idEstacionFinal != idEstacionOrigenActual) && (cargaFurgoneta <= bicisDisponiblesEstacionFinal));
     }
 
-<<<<<<< HEAD
-    private boolean puedeIntercambiarFurgonetas(int idFurgoneta1, int idFurgoneta2) {
-        int idEstacionFurgoneta1 = this.asignaciones[idFurgoneta1];
-        int idEstacionFurgoneta2 = this.asignaciones[idFurgoneta2];
-        if(idEstacionFurgoneta1 == -1 && idEstacionFurgoneta2 == -1) return false;
-        if(idEstacionFurgoneta1 == -1 || idEstacionFurgoneta2 == -1) return true;
-        int cargaFurgoneta1 = this.primerasBicisDejadas[idFurgoneta1] + this.segundasBicisDejadas[idFurgoneta1];
-        int cargaFurgoneta2 = this.primerasBicisDejadas[idFurgoneta2] + this.segundasBicisDejadas[idFurgoneta2];
-        int bicisDisponiblesEstacionFurgoneta1 = this.estaciones.get(idEstacionFurgoneta1).getNumBicicletasNext();
-        int bicisDisponiblesEstacionFurgoneta2 = this.estaciones.get(idEstacionFurgoneta2).getNumBicicletasNext();
-
-        return ((cargaFurgoneta1 <= bicisDisponiblesEstacionFurgoneta2) && (cargaFurgoneta2 <= bicisDisponiblesEstacionFurgoneta1));
-    }
-
-    private void recalcularBeneficios(int idFurgoneta, int cargaFurgoneta, int idEstacionFinal) {
-=======
     private boolean puedeCambiarEstacionDestino(int idFurgoneta, int destinoActual, int idEstacionDestinoFinal) {
         int idEstacionOrigen = this.asignaciones[idFurgoneta];
 
@@ -900,7 +847,6 @@ public class BicingSolution {
     }
 
     private void recalcularCostePorFallos(int idFurgoneta, int cargaFurgoneta, int idEstacionFinal) { // TODO: Refactor code
->>>>>>> master
         // Devolver beneficios de la estacion actual
         Estacion estacion = this.estaciones.get(this.asignaciones[idFurgoneta]);
         int demandaEstacion = estacion.getDemanda();

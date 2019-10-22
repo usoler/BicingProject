@@ -3,15 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="2ff90e44-3912-4411-8f2a-fd0040f194bf" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-<<<<<<< Updated upstream
+      <change beforePath="$PROJECT_DIR$/src/main/java/BicingHeuristicFunction1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BicingHeuristicFunction1.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/BicingHeuristicFunction2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BicingHeuristicFunction2.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/BicingProblem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BicingProblem.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/BicingSolution.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BicingSolution.java" afterDir="false" />
-<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/src/main/java/BicingSuccessorFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BicingSuccessorFunction.java" afterDir="false" />
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> master
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -41,6 +37,7 @@
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
+    <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">

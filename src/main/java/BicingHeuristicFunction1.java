@@ -13,7 +13,6 @@ public class BicingHeuristicFunction1 implements HeuristicFunction {
         } else {
             beneficios = -solution.getBeneficios();
         }
-
         return beneficios;
     }
 }
