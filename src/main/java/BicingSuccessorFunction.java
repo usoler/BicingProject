@@ -70,7 +70,7 @@ public class BicingSuccessorFunction implements SuccessorFunction {
             }
         }
 
-        //printSuccessors(successors);
+        printSuccessors(successors);
 
         System.out.println("--------------------------------------------------------");
         System.out.println("--------------------------------------------------------");

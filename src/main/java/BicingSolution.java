@@ -13,6 +13,7 @@ public class BicingSolution {
     // Representación de la solución | Coste en memoria: O(4*|F|)
     // ------------------------------------------------------------------------
     private int[] asignaciones;                 // i->id furgoneta, [i]->id estacion [Memoria O(|F|)]
+    private int[] realBicisNext;               // i->idEstacion,   [i]->Bicis que habrán en la siguiente hora [Memoria O(|E|)]
 
     private int[] primerosDestinos;             // i->id furgoneta, [i]->id estacion destino     [Memoria O(|F|)]
     private int[] segundosDestinos;             // i->id furgoneta, [i]->id estacion destino     [Memoria O(|F|)]
@@ -59,8 +60,8 @@ public class BicingSolution {
         initArraysWith(numFurgonetas);
         copyArraysFrom(solution);
 
-        this.beneficios = new Integer(solution.getBeneficios());
-        this.costeTransporte = new Double(solution.getCosteTransporte());
+        this.beneficios = solution.getBeneficios();
+        this.costeTransporte = solution.getCosteTransporte();
     }
 
     // ------------------------------------------------------------------------
@@ -75,6 +76,10 @@ public class BicingSolution {
 
         boolean[] estacionesAsignadas = new boolean[this.estaciones.size()];
         estacionesAsignadas = inicializarArrayBooleana(estacionesAsignadas);        // O(|E|)
+
+        for(int i = 0; i < this.realBicisNext.length; ++i){
+            realBicisNext[i] = this.estaciones.get(i).getNumBicicletasNext();
+        }
 
         for (int i = 0; i < this.asignaciones.length; ++i) {                        // O(|F|)
             estacionesAsignadas = asignarFurgoneta(i, estacionesAsignadas, random); // O(1)
@@ -154,7 +159,7 @@ public class BicingSolution {
     }
 
     // ------------------------------------------------------------------------
-    // Operadores
+    // OPERADORES:
     // ------------------------------------------------------------------------
 
     /**
@@ -172,9 +177,8 @@ public class BicingSolution {
             if (this.asignaciones[idFurgoneta] == -1) { // Simplemente coloca la furgoneta en la posicion origen final
                 this.asignaciones[idFurgoneta] = idEstacionFinal;
             } else { // en caso de ya tener asignada una posicion de origen
-                int cargaFurgoneta = this.primerasBicisDejadas[idFurgoneta] + this.segundasBicisDejadas[idFurgoneta];
                 deshacerCalculoCosteTransporte(idFurgoneta);
-                recalcularCostePorFallos(idFurgoneta, cargaFurgoneta, idEstacionFinal);
+                recalcularCostePorFallos(idFurgoneta, idEstacionFinal);
                 this.asignaciones[idFurgoneta] = idEstacionFinal;
                 calcularCosteTransporte(idFurgoneta);
             }
@@ -375,6 +379,10 @@ public class BicingSolution {
         return this.asignaciones;
     }
 
+    public int[] getRealBicisNext() {
+        return this.realBicisNext;
+    }
+
     public int[] getPrimerosDestinos() {
         return this.primerosDestinos;
     }
@@ -518,6 +526,7 @@ public class BicingSolution {
                 if (cargaRandom == 0) {
                     this.primerosDestinos[idFurgoneta] = -1;
                 } else {
+
                     obtenerBeneficiosPorAciertos(numBicisDemandadasDestino, numBicisDisponiblesDestino, cargaRandom);
 
                     numBicisDisponiblesEstacionOrigen = penalizarCostePorFallos(numBicisDemandadasEstacionOrigen,
@@ -665,58 +674,110 @@ public class BicingSolution {
 
         return numBicisFaltantes;
     }
+    /**
+     * Penaliza el coste por los fallos de la furgoneta con idFurgoneta y con carga x en la estación de origen de la furgoneta
+     * <p>
+     *
+     * @param idFurgoneta id de la furgoneta
+     */
 
-    private int penalizarCostePorFallos(int numBicisDemandadasEstacionOrigen, int numBicisDisponiblesEstacionOrigen,
-                                        int cargaRandom) {      // O(1)
+    private void penalizarCostePorFallos(int idFurgoneta) {      // O(1)
         System.out.println("Penalizamos fallos");
-        boolean existeDeficitAntesDeCargar = (numBicisDemandadasEstacionOrigen > numBicisDisponiblesEstacionOrigen);
-        boolean existeDeficitDespuesDeCargar = (numBicisDemandadasEstacionOrigen > numBicisDisponiblesEstacionOrigen - cargaRandom);
-        System.out.println(String.format("Num bicis demandadas = '%s'", numBicisDemandadasEstacionOrigen));
-        System.out.println(String.format("Num bicis disponibles = '%s'", numBicisDisponiblesEstacionOrigen));
-        if (existeDeficitAntesDeCargar) {
-            this.beneficios -= cargaRandom;
-            numBicisDisponiblesEstacionOrigen -= cargaRandom;
-            System.out.println(String.format("Coste por fallo = '%s'", cargaRandom));
-        } else if (existeDeficitDespuesDeCargar) {
-            this.beneficios -= (numBicisDemandadasEstacionOrigen - numBicisDisponiblesEstacionOrigen + cargaRandom);
-            System.out.println(String.format("Coste por fallo = '%s'",
-                    (numBicisDemandadasEstacionOrigen - numBicisDisponiblesEstacionOrigen + cargaRandom)));
+        int cargaFurgoneta = this.primerasBicisDejadas[idFurgoneta] + this.segundasBicisDejadas[idFurgoneta];
+        Estacion estacionOrigen = this.estaciones.get(this.asignaciones[idFurgoneta]);
+        int maxBicisSinPen =  this.realBicisNext[this.asignaciones[idFurgoneta]] - estacionOrigen.getDemanda();
+
+        if(maxBicisSinPen <= 0){
+            System.out.println("Fallos: '%s'" + cargaFurgoneta);
+            this.beneficios -= cargaFurgoneta;
+        } else if(cargaFurgoneta>maxBicisSinPen){
+            //Resta solamente las bicis que nos alejamos de más de la demanda
+            System.out.println("Fallos: '%s'" + (cargaFurgoneta - maxBicisSinPen));
+            this.beneficios -= (cargaFurgoneta - maxBicisSinPen);
         } else {
-            System.out.println("No hay coste por fallos");
+            System.out.println("Fallos: 0");
         }
 
-        return numBicisDisponiblesEstacionOrigen;
+        this.realBicisNext[this.asignaciones[idFurgoneta]] -= cargaFurgoneta;
+
     }
 
-    private void obtenerBeneficiosPorAciertos(int numBicisDemandadasDestino, int numBicisDisponiblesDestino,
-                                              int cargaRandom) {        // O(1)
+    /**
+     * Suma los beneficios que obtenemos de enviar la furgoneta al destino seleccionado
+     * <p>
+     *
+     * @param idFurgoneta id de la furgoneta
+     * @param destinoUnoODos 1 si queremos mirar el primer destino, 2 para el segundo
+     */
+    private void obtenerBeneficiosPorAciertos(int idFurgoneta, int destinoUnoODos) {        // O(1)
         System.out.println("Obtenemos beneficios por aciertos");
-        boolean existeDeficitAntesDeDescargar = (numBicisDemandadasDestino > numBicisDisponiblesDestino);
-        boolean existeDeficitDespuesDeDescargar = (numBicisDemandadasDestino > numBicisDisponiblesDestino + cargaRandom);
-        System.out.println(String.format("Num bicis demandadas = '%s'", numBicisDemandadasDestino));
-        System.out.println(String.format("Num bicis disponibles = '%s'", numBicisDisponiblesDestino));
-        if (existeDeficitAntesDeDescargar && existeDeficitDespuesDeDescargar) {
-            this.beneficios += cargaRandom;
-            System.out.println(String.format("Beneficio por acierto = '%s'", cargaRandom));
-        } else if (existeDeficitAntesDeDescargar && !(existeDeficitDespuesDeDescargar)) {
-            this.beneficios += (numBicisDemandadasDestino - numBicisDisponiblesDestino);
-            System.out.println(String.format("Beneficio por acierto = '%s'",
-                    (numBicisDemandadasDestino - numBicisDisponiblesDestino)));
+        Estacion estacionDestino;
+        int estacionID;
+        int cargaADejar;
+        if(destinoUnoODos == 1){
+             estacionDestino = this.estaciones.get(this.primerosDestinos[idFurgoneta]);
+             cargaADejar = primerasBicisDejadas[idFurgoneta];
+             estacionID = this.primerosDestinos[idFurgoneta];
+        } else if (destinoUnoODos == 2){
+            estacionDestino = this.estaciones.get(this.segundosDestinos[idFurgoneta]);
+            cargaADejar = segundasBicisDejadas[idFurgoneta];
+            estacionID = this.segundosDestinos[idFurgoneta];
         } else {
-            System.out.println("No hay beneficios obtenidos");
+            System.out.println("Error al seleccionar el destino de la función obterBeneficiosPorAciertos");
+            return;
         }
+
+        //Si puede haber beneficios (Demanda > next)
+        int maxBeneficios =  estacionDestino.getDemanda() - this.realBicisNext[estacionID];
+        if(maxBeneficios > 0){
+            //Si tenemos mas carga que beneficios posibles, los beneficios es el max beneficios, sino los beneficios son la carga
+            if(cargaADejar>maxBeneficios){
+                this.beneficios += maxBeneficios;
+            } else {
+                this.beneficios += cargaADejar;
+            }
+        }
+
+        this.realBicisNext[estacionID] += cargaADejar;
     }
 
-    private void deshacerBeneficiosPorAciertos(int numBicisDemandadasDestino, int numBicisDisponiblesDestino,
-                                               int carga) {
-        boolean existeDeficitAntesDeDescargar = (numBicisDemandadasDestino > numBicisDisponiblesDestino);
-        boolean existeDeficitDespuesDeDescargar = (numBicisDemandadasDestino > numBicisDisponiblesDestino + carga);
-
-        if (existeDeficitAntesDeDescargar && existeDeficitDespuesDeDescargar) {
-            this.beneficios -= carga;
-        } else if (existeDeficitAntesDeDescargar && !(existeDeficitDespuesDeDescargar)) {
-            this.beneficios -= (numBicisDemandadasDestino - numBicisDisponiblesDestino);
+    /**
+     * Resta los beneficios que obtenemos de enviar la furgoneta al destino seleccionado. Esta función se llama
+     * antes de cambiar un destino.
+     * <p>
+     *
+     * @param idFurgoneta id de la furgoneta
+     * @param destinoUnoODos 1 si queremos mirar el primer destino, 2 para el segundo
+     */
+    private void deshacerBeneficiosPorAciertos(int idFurgoneta, int destinoUnoODos) {        // O(1)
+        System.out.println("Restamos beneficios por aciertos");
+        Estacion estacionDestino;
+        int estacionID;
+        int cargaADejar;
+        if(destinoUnoODos == 1){
+            estacionDestino = this.estaciones.get(this.primerosDestinos[idFurgoneta]);
+            cargaADejar = primerasBicisDejadas[idFurgoneta];
+            estacionID = this.primerosDestinos[idFurgoneta];
+        } else if (destinoUnoODos == 2){
+            estacionDestino = this.estaciones.get(this.segundosDestinos[idFurgoneta]);
+            cargaADejar = segundasBicisDejadas[idFurgoneta];
+            estacionID = this.segundosDestinos[idFurgoneta];
+        } else {
+            System.out.println("Error al seleccionar el destino de la función obterBeneficiosPorAciertos");
+            return;
         }
+
+        this.realBicisNext[estacionID] -= cargaADejar;
+        int maxBeneficios =  estacionDestino.getDemanda() - this.realBicisNext[estacionID];
+        if(maxBeneficios > 0){
+            //Si tenemos mas carga que beneficios posibles, los beneficios es el max beneficios, sino los beneficios son la carga
+            if(cargaADejar>maxBeneficios){
+                this.beneficios -= maxBeneficios;
+            } else {
+                this.beneficios -= cargaADejar;
+            }
+        }
+
     }
 
     private void calcularCosteTransporte(int idFurgoneta) {         // O(1)
@@ -785,9 +846,14 @@ public class BicingSolution {
     private boolean puedeMoverFurgoneta(int idFurgoneta, int idEstacionFinal) {
         int idEstacionOrigenActual = this.asignaciones[idFurgoneta];
         int cargaFurgoneta = this.primerasBicisDejadas[idFurgoneta] + this.segundasBicisDejadas[idFurgoneta];
-        int bicisDisponiblesEstacionFinal = this.estaciones.get(idEstacionFinal).getNumBicicletasNext();
+        int bicisDisponiblesEstacionFinal = this.estaciones.get(idEstacionFinal).getNumBicicletasNoUsadas();
+        //Comprobamos que la estación destino no esté ocupada
+        boolean ocupada = false;
+        for(int i = 0; i < this.asignaciones.length; ++i){
+            if(this.asignaciones[i] == idEstacionFinal) ocupada = true;
+        }
 
-        return ((idEstacionFinal != idEstacionOrigenActual) && (cargaFurgoneta <= bicisDisponiblesEstacionFinal));
+        return ((idEstacionFinal != idEstacionOrigenActual) && (cargaFurgoneta <= bicisDisponiblesEstacionFinal) && !ocupada);
     }
 
     private boolean puedeCambiarEstacionDestino(int idFurgoneta, int destinoActual, int idEstacionDestinoFinal) {
@@ -846,8 +912,19 @@ public class BicingSolution {
         return true;
     }
 
-    private void recalcularCostePorFallos(int idFurgoneta, int cargaFurgoneta, int idEstacionFinal) { // TODO: Refactor code
+    /**
+     * Recalcula el coste por los fallos
+     * <p>
+     * Factor ramificación: O(31 * F * F)
+     *
+     * @param idFurgoneta id de la furgoneta a la que cargar las bicis
+     * @param numBicis1   número de bicis que cargar en el destino1
+     * @param numBicis2   numero de bicis que cargar en el destino2
+     */
+
+    private void recalcularCostePorFallos(int idFurgoneta, int idEstacionFinal) { // TODO: Refactor code
         // Devolver beneficios de la estacion actual
+        int cargaFurgoneta = this.primerasBicisDejadas[idFurgoneta] + this.segundasBicisDejadas[idFurgoneta];
         Estacion estacion = this.estaciones.get(this.asignaciones[idFurgoneta]);
         int demandaEstacion = estacion.getDemanda();
         int bicisLibres = estacion.getNumBicicletasNext();
@@ -946,6 +1023,8 @@ public class BicingSolution {
 
         this.primerasBicisDejadas = new int[numFurgonetas];
         this.segundasBicisDejadas = new int[numFurgonetas];
+
+        this.realBicisNext = new int[getEstaciones().size()];
     }
 
     private int[] initArrayEstacionesProsperas() {
@@ -960,6 +1039,7 @@ public class BicingSolution {
 
     private void copyArraysFrom(BicingSolution solution) { // O(1)
         System.arraycopy(solution.getAsignaciones(), 0, this.asignaciones, 0, solution.getAsignaciones().length);
+        System.arraycopy(solution.getRealBicisNext(), 0, this.realBicisNext, 0, solution.getRealBicisNext().length);
         System.arraycopy(solution.getPrimerosDestinos(), 0, this.primerosDestinos, 0, solution.getPrimerosDestinos().length);
         System.arraycopy(solution.getSegundosDestinos(), 0, this.segundosDestinos, 0, solution.getSegundosDestinos().length);
         System.arraycopy(solution.getPrimerasBicisDejadas(), 0, this.primerasBicisDejadas, 0, solution.getPrimerasBicisDejadas().length);
