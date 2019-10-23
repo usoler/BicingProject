@@ -17,10 +17,12 @@ public class BicingSuccessorFunction implements SuccessorFunction {
         int numEstaciones = solution.getEstaciones().size();
 
         boolean[] estacionesOcupadas = new boolean[numEstaciones];
+/*
         estacionesOcupadas = calcularEstacionesOcupadas(estacionesOcupadas, solution.getAsignaciones()); // O(F)
+*/
         int contadorEspacio = 0;
 
-        for (int i = 0; i < numFurgonetas; ++i) { // O(|F|) * O(|F| + |E|)
+        /*for (int i = 0; i < numFurgonetas; ++i) { // O(|F|) * O(|F| + |E|)
             // Sucesores generados por el operador 'moverFurgoneta'
             for (int j = 0; j < numEstaciones; ++j) { // O(|E|)
                 ++contadorEspacio;
@@ -67,8 +69,8 @@ public class BicingSuccessorFunction implements SuccessorFunction {
                         successors.add(new Successor(actionMessage, nuevaSolution));
                     }
                 }
-            }
-        }
+            }*/
+       /* }
 
         printSuccessors(successors);
 
@@ -78,11 +80,11 @@ public class BicingSuccessorFunction implements SuccessorFunction {
         System.out.println(String.format("Numero de sucesores: %s", successors.size()));
         System.out.println("--------------------------------------------------------");
         System.out.println("--------------------------------------------------------");
-
+*/
         return successors;
     }
 
-    private boolean[] calcularEstacionesOcupadas(boolean[] estacionesOcupadas, int[] asignaciones) { // O(|F|)
+ /*   private boolean[] calcularEstacionesOcupadas(boolean[] estacionesOcupadas, int[] asignaciones) { // O(|F|)
         for (int i = 0; i < asignaciones.length; ++i) {
             if (asignaciones[i] != -1) {
                 estacionesOcupadas[asignaciones[i]] = true;
@@ -102,5 +104,5 @@ public class BicingSuccessorFunction implements SuccessorFunction {
             System.out.println(String.format("Coste transporte sucesor: '%s'", solution.getCosteTransporte()));
             System.out.println("***********************************");
         }
-    }
+    }*/
 }

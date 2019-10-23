@@ -47,17 +47,24 @@ public class BicingProblem {
             if (generadorSeleccionado == 0) {
                 solucionInicial.generadorSolucion1();
             } else {
-                solucionInicial.generadorSolucion2();
+                //solucionInicial.generadorSolucion2();
             }
 
             System.out.println("FINAL DE LA GENERACION");
             System.out.println("****************************************************");
             printInfoEstaciones(solucionInicial);
             printBeneficiosMaximosPosibles(solucionInicial);
-            System.out.println(String.format("BENEFICIOS - COSTE POR FALLOS: '%s'", solucionInicial.getBeneficios()));
+            /*System.out.println(String.format("BENEFICIOS - COSTE POR FALLOS: '%s'", solucionInicial.getBeneficios()));
+            System.out.println(String.format("COSTE POR TRANSPORTE: '%s'", solucionInicial.getCosteTransporte()));*/
+
+            System.out.println(String.format("BENEFICIOS - COSTE POR FALLOS: '%s'", solucionInicial.getBeneficioAcierto() - solucionInicial.getPenalizacionFallo()));
+            System.out.println(String.format("BENEFICIOS: '%s'", solucionInicial.getBeneficioAcierto()));
+            System.out.println(String.format("COSTE POR FALLOS: '%s'", solucionInicial.getPenalizacionFallo()));
             System.out.println(String.format("COSTE POR TRANSPORTE: '%s'", solucionInicial.getCosteTransporte()));
 
+/*
             BicingHillClimbingSearch(solucionInicial);
+*/
             printCoords(solucionInicial);
 
             mostrarMenu();
@@ -80,7 +87,7 @@ public class BicingProblem {
         System.out.println(" ");
         System.out.println("Introduce 0 para iniciar un nuevo problema Bicing o 1 para salir");
     }
-
+/*
     private static void BicingHillClimbingSearch(BicingSolution solution) {
         try {
             Problem problem = new Problem(solution, new BicingSuccessorFunction(), new BicingGoalTest(), new BicingHeuristicFunction1());
@@ -100,7 +107,7 @@ public class BicingProblem {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-    }
+    }*/
 
     private static void printActions(List actions) {
         for (int i = 0; i < actions.size(); i++) {

@@ -8,11 +8,11 @@ public class BicingHeuristicFunction1 implements HeuristicFunction {
 
         int beneficios = 0;
 
-        if (solution.getBeneficios() < 0) {
+      /*  if (solution.getBeneficios() < 0) {
             beneficios = Math.abs(solution.getBeneficios());
         } else {
             beneficios = -solution.getBeneficios();
-        }
+        }*/
 
         return beneficios;
     }
