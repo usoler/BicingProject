@@ -285,9 +285,9 @@ public class BicingSolution {
         if (puedeCargarFurgoneta(idFurgoneta, numBicis1, numBicis2)) {
 
             deshacerPenalizarCostePorFallo(idFurgoneta);
-            deshacerBeneficiosPorAciertos(idFurgoneta, 1);
+            deshacerBeneficiosPorAciertos(idFurgoneta, 0);
             if (this.segundosDestinos[idFurgoneta] != -1) {
-                deshacerBeneficiosPorAciertos(idFurgoneta, 2);
+                deshacerBeneficiosPorAciertos(idFurgoneta, 1);
             }
             deshacerCalculoCosteTransporte(idFurgoneta);
 
@@ -747,11 +747,11 @@ public class BicingSolution {
         Estacion estacionDestino;
         int estacionID;
         int cargaADejar;
-        if (destinoUnoODos == 0) {
+        if ((destinoUnoODos == 0) && (this.primerosDestinos[idFurgoneta] != -1)) {
             estacionDestino = this.estaciones.get(this.primerosDestinos[idFurgoneta]);
             cargaADejar = primerasBicisDejadas[idFurgoneta];
             estacionID = this.primerosDestinos[idFurgoneta];
-        } else if (destinoUnoODos == 1) {
+        } else if ((destinoUnoODos == 1) && (this.segundosDestinos[idFurgoneta] != -1)) {
             estacionDestino = this.estaciones.get(this.segundosDestinos[idFurgoneta]);
             cargaADejar = segundasBicisDejadas[idFurgoneta];
             estacionID = this.segundosDestinos[idFurgoneta];
@@ -795,11 +795,11 @@ public class BicingSolution {
         Estacion estacionDestino;
         int estacionID;
         int cargaADejar;
-        if (destinoUnoODos == 1) {
+        if ((destinoUnoODos == 0) && (this.primerosDestinos[idFurgoneta] != -1)) {
             estacionDestino = this.estaciones.get(this.primerosDestinos[idFurgoneta]);
             cargaADejar = primerasBicisDejadas[idFurgoneta];
             estacionID = this.primerosDestinos[idFurgoneta];
-        } else if (destinoUnoODos == 2) {
+        } else if ((destinoUnoODos == 1) && (this.segundosDestinos[idFurgoneta] != -1)) {
             estacionDestino = this.estaciones.get(this.segundosDestinos[idFurgoneta]);
             cargaADejar = segundasBicisDejadas[idFurgoneta];
             estacionID = this.segundosDestinos[idFurgoneta];
