@@ -113,6 +113,8 @@ public class BicingProblem {
             System.out.println(String.format("FINAL: BENEFICIOS: '%s'", goalSolution.getBeneficioPorAcierto()));
             System.out.println(String.format("FINAL: COSTE POR FALLOS: '%s'", goalSolution.getPenalizacionPorFallo()));
             System.out.println(String.format("FINAL: COSTE POR TRANSPORTE: '%s'", goalSolution.getCosteTransporte()));
+            System.out.println(String.format("FINAL: TOTAL GANADO: '%s'", goalSolution.getBeneficioPorAcierto() - goalSolution.getPenalizacionPorFallo() - goalSolution.getCosteTransporte()));
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }

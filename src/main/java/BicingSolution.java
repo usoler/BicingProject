@@ -733,13 +733,11 @@ public class BicingSolution {
 
         if (maxBicisSinPen <= 0) {
             System.out.println(String.format("Penalizacion por fallos (cargaFurgoneta): '%s'", cargaFurgoneta));
-//            this.beneficios -= cargaFurgoneta;
             this.penalizacionPorFallo += cargaFurgoneta;
         } else if (cargaFurgoneta > maxBicisSinPen) {
             //Resta solamente las bicis que nos alejamos de más de la demanda
             System.out.println("Fallos: '%s'" + (cargaFurgoneta - maxBicisSinPen));
             System.out.println(String.format("Penalizacion por fallos (cargaFurgoneta - maxBicisSinPen): '%s'", (cargaFurgoneta - maxBicisSinPen)));
-//            this.beneficios -= (cargaFurgoneta - maxBicisSinPen);
             this.penalizacionPorFallo += (cargaFurgoneta - maxBicisSinPen);
         } else {
             System.out.println("No hay ninguna penalizacion por fallos");
@@ -781,11 +779,9 @@ public class BicingSolution {
         if (maxBeneficios > 0) {
             //Si tenemos mas carga que beneficios posibles, los beneficios es el max beneficios, sino los beneficios son la carga
             if (cargaADejar > maxBeneficios) {
-//                this.beneficios += maxBeneficios;
                 this.beneficioPorAcierto += maxBeneficios;
                 System.out.println(String.format("Beneficio a acumular (maxBeneficios): '%s'", maxBeneficios));
             } else {
-//                this.beneficios += cargaADejar;
                 this.beneficioPorAcierto += cargaADejar;
                 System.out.println(String.format("Beneficio a acumular (cargaADejar): '%s'", cargaADejar));
             }
@@ -827,11 +823,9 @@ public class BicingSolution {
         if (maxBeneficios > 0) {
             //Si tenemos mas carga que beneficios posibles, los beneficios es el max beneficios, sino los beneficios son la carga
             if (cargaADejar > maxBeneficios) {
-//                this.beneficios -= maxBeneficios;
                 this.beneficioPorAcierto -= maxBeneficios;
                 System.out.println(String.format("Deshacemos beneficio a acumular (maxBeneficios): '%s'", maxBeneficios));
             } else {
-//                this.beneficios -= cargaADejar;
                 this.beneficioPorAcierto -= cargaADejar;
                 System.out.println(String.format("Deshacemos beneficio a acumular (cargaADejar): '%s'", maxBeneficios));
             }
@@ -924,13 +918,11 @@ public class BicingSolution {
 
         if (hueco < 0) {
             System.out.println(String.format("Deshacemos penalizacion (cargaFurgoneta): '%s'", cargaFurgoneta));
-//            this.beneficios += cargaFurgoneta;
             this.penalizacionPorFallo -= cargaFurgoneta;
         } else if (cargaFurgoneta > hueco) {
             //Resta solamente las bicis que nos alejamos de más de la demanda
             System.out.println(String.format("Deshacemos penalizacion (cargaFurgoneta-hueco): '%s'", (cargaFurgoneta - hueco)));
             System.out.println("Deshacemos '%s' fallos" + (cargaFurgoneta - hueco));
-//            this.beneficios += (cargaFurgoneta - hueco);
             this.penalizacionPorFallo -= (cargaFurgoneta - hueco);
         } else {
             System.out.println("Fallos: 0");

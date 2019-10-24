@@ -6,6 +6,6 @@ public class BicingHeuristicFunction1 implements HeuristicFunction {
     public double getHeuristicValue(Object state) {
         BicingSolution solution = (BicingSolution) state;
 
-        return (2 * solution.getPenalizacionPorFallo() - solution.getBeneficioPorAcierto());
+        return (solution.getPenalizacionPorFallo() - 10 * solution.getBeneficioPorAcierto());
     }
 }
