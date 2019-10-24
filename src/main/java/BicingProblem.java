@@ -48,7 +48,7 @@ public class BicingProblem {
             if (generadorSeleccionado == 0) {
                 solucionInicial.generadorSolucion1();
             } else {
-                solucionInicial.generadorSolucion2();
+                //solucionInicial.generadorSolucion2();
             }
 
             System.out.println("FINAL DE LA GENERACION");
