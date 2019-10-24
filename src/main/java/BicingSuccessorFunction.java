@@ -98,7 +98,7 @@ public class BicingSuccessorFunction implements SuccessorFunction {
             System.out.println(String.format("Sucesor: '%s'", i));
             Successor successor = successors.get(i);
             BicingSolution solution = (BicingSolution) successor.getState();
-            System.out.println(String.format("Beneficios sucesor: '%s'", solution.getBeneficios()));
+            System.out.println(String.format("Beneficios sucesor: '%s'", solution.getBeneficioPorAcierto() - solution.getPenalizacionPorFallo()));
             System.out.println(String.format("Coste transporte sucesor: '%s'", solution.getCosteTransporte()));
             System.out.println("***********************************");
         }
