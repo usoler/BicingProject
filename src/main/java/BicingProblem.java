@@ -1,7 +1,5 @@
 import IA.Bicing.Estaciones;
-import aima.search.framework.Problem;
-import aima.search.framework.Search;
-import aima.search.framework.SearchAgent;
+import aima.search.framework.*;
 import aima.search.informed.HillClimbingSearch;
 import aima.search.informed.SimulatedAnnealingSearch;
 
@@ -86,19 +84,25 @@ public class BicingProblem {
 
     private static void Bicing_Search(BicingSolution solution, int algoritmoSeleccionado, int heuristicoSeleccionado) {
         try {
-            Problem problem;
+            HeuristicFunction heuristicFunction;
             if (heuristicoSeleccionado == 0) {
-                problem = new Problem(solution, new BicingSuccessorFunction(), new BicingGoalTest(), new BicingHeuristicFunction1());
+                heuristicFunction = new BicingHeuristicFunction1();
             } else {
-                problem = new Problem(solution, new BicingSuccessorFunction(), new BicingGoalTest(), new BicingHeuristicFunction2());
+                heuristicFunction = new BicingHeuristicFunction2();
             }
 
+            SuccessorFunction successorFunction;
             Search search;
             if (algoritmoSeleccionado == 0) {
+                successorFunction = new BicingSuccessorFunction1();
                 search = new HillClimbingSearch();
             } else {
+                successorFunction = new BicingSuccessorFunction2();
                 search = new SimulatedAnnealingSearch();
             }
+
+            Problem problem = new Problem(solution, successorFunction, new BicingGoalTest(), heuristicFunction);
+
             long startTime = System.currentTimeMillis();
             SearchAgent agent = new SearchAgent(problem, search); // TODO: ignorar System.out.println para calcular el tiempo correctamente
             long endTime = System.currentTimeMillis();
