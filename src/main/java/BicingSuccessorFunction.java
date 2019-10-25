@@ -19,7 +19,6 @@ public class BicingSuccessorFunction implements SuccessorFunction {
         boolean[] estacionesOcupadas = new boolean[numEstaciones];
         estacionesOcupadas = calcularEstacionesOcupadas(estacionesOcupadas, solution.getAsignaciones()); // O(F)
         int contadorEspacio = 0;
-
         for (int i = 0; i < numFurgonetas; ++i) { // O(|F|) * O(|F| + |E|)
             // Sucesores generados por el operador 'moverFurgoneta'
             for (int j = 0; j < numEstaciones; ++j) { // O(|E|)
@@ -62,6 +61,10 @@ public class BicingSuccessorFunction implements SuccessorFunction {
                     ++contadorEspacio;
                     BicingSolution nuevaSolution = new BicingSolution(solution);
                     if (nuevaSolution.cargarFurgoneta(i, j, k)) {
+                        if (j == 0) { // Para mostrar el mensaje correcto del swap
+                            j = k;
+                            k = 0;
+                        }
                         String actionMessage = String.format("Furgoneta con id = '%s' cargada con '%s' bicis " +
                                 "para el destino1 y '%s' para el destino2", i, j, k);
                         successors.add(new Successor(actionMessage, nuevaSolution));
@@ -98,7 +101,7 @@ public class BicingSuccessorFunction implements SuccessorFunction {
             System.out.println(String.format("Sucesor: '%s'", i));
             Successor successor = successors.get(i);
             BicingSolution solution = (BicingSolution) successor.getState();
-            System.out.println(String.format("Beneficios sucesor: '%s'", solution.getBeneficios()));
+            System.out.println(String.format("Beneficios sucesor: '%s'", solution.getBeneficioPorAcierto() - solution.getPenalizacionPorFallo()));
             System.out.println(String.format("Coste transporte sucesor: '%s'", solution.getCosteTransporte()));
             System.out.println("***********************************");
         }

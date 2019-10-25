@@ -55,7 +55,9 @@ public class BicingProblem {
             System.out.println("****************************************************");
             printInfoEstaciones(solucionInicial);
             printBeneficiosMaximosPosibles(solucionInicial);
-            System.out.println(String.format("BENEFICIOS - COSTE POR FALLOS: '%s'", solucionInicial.getBeneficios()));
+            System.out.println(String.format("BENEFICIOS - COSTE POR FALLOS: '%s'", solucionInicial.getBeneficioPorAcierto() - solucionInicial.getPenalizacionPorFallo()));
+            System.out.println(String.format("BENEFICIOS: '%s'", solucionInicial.getBeneficioPorAcierto()));
+            System.out.println(String.format("COSTE POR FALLOS: '%s'", solucionInicial.getPenalizacionPorFallo()));
             System.out.println(String.format("COSTE POR TRANSPORTE: '%s'", solucionInicial.getCosteTransporte()));
 
             Bicing_Search(solucionInicial, algoritmoSeleccionado, heuristicoSeleccionado);
@@ -82,7 +84,7 @@ public class BicingProblem {
         System.out.println("Introduce 0 para iniciar un nuevo problema Bicing o 1 para salir");
     }
 
-    private static void Bicing_Search(BicingSolution solution,int algoritmoSeleccionado, int heuristicoSeleccionado) {
+    private static void Bicing_Search(BicingSolution solution, int algoritmoSeleccionado, int heuristicoSeleccionado) {
         try {
             Problem problem;
             if (heuristicoSeleccionado == 0) {
@@ -92,7 +94,7 @@ public class BicingProblem {
             }
 
             Search search;
-            if(algoritmoSeleccionado == 0) {
+            if (algoritmoSeleccionado == 0) {
                 search = new HillClimbingSearch();
             } else {
                 search = new SimulatedAnnealingSearch();
@@ -107,8 +109,12 @@ public class BicingProblem {
             printInstrumentation(agent.getInstrumentation());
             System.out.print(((BicingSolution) search.getGoalState()).toString());
             BicingSolution goalSolution = ((BicingSolution) search.getGoalState());
-            System.out.println(String.format("FINAL : BENEFICIOS - COSTE POR FALLOS: '%s'", goalSolution.getBeneficios()));
+            System.out.println(String.format("FINAL: BENEFICIOS - COSTE POR FALLOS: '%s'", goalSolution.getBeneficioPorAcierto() - goalSolution.getPenalizacionPorFallo()));
+            System.out.println(String.format("FINAL: BENEFICIOS: '%s'", goalSolution.getBeneficioPorAcierto()));
+            System.out.println(String.format("FINAL: COSTE POR FALLOS: '%s'", goalSolution.getPenalizacionPorFallo()));
             System.out.println(String.format("FINAL: COSTE POR TRANSPORTE: '%s'", goalSolution.getCosteTransporte()));
+            System.out.println(String.format("FINAL: TOTAL GANADO: '%s'", goalSolution.getBeneficioPorAcierto() - goalSolution.getPenalizacionPorFallo() - goalSolution.getCosteTransporte()));
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
