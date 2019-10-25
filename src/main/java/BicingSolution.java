@@ -104,12 +104,15 @@ public class BicingSolution {
 
     /**
      * Genera una solucion inicial que distribuye las furgonetas disponibles entre las estaciones mas prosperas.
-     * Asigna a cada furgoneta entre 0 y 2 estaciones destino con deficit dentro de un radio de distancia de X km.
+     * Asigna a cadxa furgoneta entre 0 y 2 estaciones destino con deficit dentro de un radio de distancia de X km.
      */
 
     public void generadorSolucion2() {
         int[] estacionesProsperas = initArrayEstacionesProsperas(); // Estaciones ordenadas de mas prospera a menos
 
+        for (int i = 0; i < this.realBicisNext.length; ++i) {
+            realBicisNext[i] = this.estaciones.get(i).getNumBicicletasNext();
+        }
 
         System.out.println("ESTACIONES ORDENADAS PROSPERAMENTE");
         for (int a = 0; a < estacionesProsperas.length; ++a) {
@@ -561,6 +564,7 @@ public class BicingSolution {
     private void asignarDestinosConDeficit(int idFurgoneta, int[] estacionesDeficit, int index) {
         System.out.println(String.format("Asignando al destino1 de la furgoneta con id '%s' la estacion " +
                 "con deficit '%s' (index = %s)", idFurgoneta, estacionesDeficit[index], index));
+
         this.primerosDestinos[idFurgoneta] = estacionesDeficit[index];
 
         if (index < estacionesDeficit.length - 1) {
@@ -612,15 +616,22 @@ public class BicingSolution {
             }
         }
     }
-/*
+
     private int[] asignarCargaDestinosConDeficit(int idFurgoneta, int[] numBicisFaltantes, int index) {
         System.out.println(String.format("Asignando carga destino1 a furgoenta con id '%s', a estacion " +
                 "con num bicis faltantes '%s' (index = %s)", idFurgoneta, numBicisFaltantes[index], index));
         int demandaOrigen = this.estaciones.get(this.asignaciones[idFurgoneta]).getDemanda();
         int bicisDisponiblesOrigen = this.estaciones.get(this.asignaciones[idFurgoneta]).getNumBicicletasNext();
+        int bicisNoUsadasOrigen = this.estaciones.get(this.asignaciones[idFurgoneta]).getNumBicicletasNoUsadas();
         int bicisParaCargar = bicisDisponiblesOrigen - demandaOrigen;
+
+        if (bicisParaCargar > bicisNoUsadasOrigen) {
+            bicisParaCargar = bicisNoUsadasOrigen;
+        }
+
         System.out.println(String.format("Demanda estacion origen = %s", demandaOrigen));
         System.out.println(String.format("Bicis disponibles origen = %s", bicisDisponiblesOrigen));
+        System.out.println(String.format("Bicis no usadas origen = %s", bicisNoUsadasOrigen));
         System.out.println(String.format("Bicis para cargar = %s", bicisParaCargar));
 
         if (bicisParaCargar > 30) {
@@ -672,6 +683,7 @@ public class BicingSolution {
             } else { // dejo en el destino todas las que puedo cargar (no tendra segundo destino)
                 System.out.println(String.format("Bicis para cargar '%s' < bicis faltantes '%s'",
                         bicisParaCargar, numBicisFaltantes[index]));
+
                 this.primerasBicisDejadas[idFurgoneta] = bicisParaCargar;
                 bicisParaCargar = 0;
                 numBicisFaltantes[index] -= this.primerasBicisDejadas[idFurgoneta];
@@ -685,6 +697,7 @@ public class BicingSolution {
         } else { // dejo en el destino todas las que puedo cargar (no tendra segundo destino)
             System.out.println(String.format("Tengo mas de 30 bicis faltantes ('%s' faltantes)",
                     numBicisFaltantes[index]));
+
             this.primerasBicisDejadas[idFurgoneta] = bicisParaCargar;
             bicisParaCargar = 0;
             numBicisFaltantes[index] -= this.primerasBicisDejadas[idFurgoneta];
@@ -697,25 +710,17 @@ public class BicingSolution {
         }
 
         if ((this.primerosDestinos[idFurgoneta] != 1) && (this.primerasBicisDejadas[idFurgoneta] > 0)) {
-            int demandaDestino1 = this.estaciones.get(this.primerosDestinos[idFurgoneta]).getDemanda();
-            int bicisDisponiblesDestino1 = this.estaciones.get(this.primerosDestinos[idFurgoneta]).getNumBicicletasNext();
-
-            obtenerBeneficiosPorAciertos(demandaDestino1, bicisDisponiblesDestino1, this.primerasBicisDejadas[idFurgoneta]);
+            obtenerBeneficiosPorAciertos(idFurgoneta, 0);
 
             if ((this.segundosDestinos[idFurgoneta] != -1) && (this.segundasBicisDejadas[idFurgoneta] > 0)) {
-                int demandaDestino2 = this.estaciones.get(this.segundosDestinos[idFurgoneta]).getDemanda();
-                int bicisDisponiblesDestino2 = this.estaciones.get(this.segundosDestinos[idFurgoneta]).getNumBicicletasNext();
 
-                obtenerBeneficiosPorAciertos(demandaDestino2, bicisDisponiblesDestino2, this.segundasBicisDejadas[idFurgoneta]);
+                obtenerBeneficiosPorAciertos(idFurgoneta, 1);
             }
         }
-
-        penalizarCostePorFallos(demandaOrigen, bicisDisponiblesOrigen,
-                this.primerasBicisDejadas[idFurgoneta] + this.segundasBicisDejadas[idFurgoneta]);
+        penalizarCostePorFallos(idFurgoneta);
 
         return numBicisFaltantes;
     }
-*/
 
     //CÁLCULO DE BENEFICIOS Y COSTES:
 
@@ -1063,8 +1068,8 @@ public class BicingSolution {
             if (ordenProspero) {
                 evaluador1 = bicisDisponibles1 - demanda1;
                 evaluador2 = bicisDisponibles2 - demanda2;
-                if(bicisNoUsadas1 < evaluador1) evaluador1 = bicisNoUsadas1;
-                if(bicisNoUsadas2 < evaluador2) evaluador2 = bicisNoUsadas2;
+                if (bicisNoUsadas1 < evaluador1) evaluador1 = bicisNoUsadas1;
+                if (bicisNoUsadas2 < evaluador2) evaluador2 = bicisNoUsadas2;
             } else {
                 evaluador1 = demanda1 - bicisDisponibles1;
                 evaluador2 = demanda2 - bicisDisponibles2;
@@ -1112,6 +1117,7 @@ public class BicingSolution {
 
         return arrayList.stream().mapToInt(i -> i).toArray();
     }
+
     //Las estaciones que faltan en cada estación para cumplir con la demanda
     private int[] inicializarArrayBicisFaltantes(int[] estacionesConDeficit, int[] numBicisFaltantes) {
         System.out.println("Inicializando array de bicis faltantes:");
