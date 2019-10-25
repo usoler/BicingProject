@@ -3,6 +3,7 @@ import aima.search.framework.Problem;
 import aima.search.framework.Search;
 import aima.search.framework.SearchAgent;
 import aima.search.informed.HillClimbingSearch;
+import aima.search.informed.SimulatedAnnealingSearch;
 
 import java.util.*;
 
@@ -27,16 +28,16 @@ public class BicingProblem {
             int numeroFurgonetas = scanner.nextInt();
             TipoDemanda tipoDemanda = TipoDemanda.values()[scanner.nextInt()];
 
-//        System.out.println("Introduce 0 para utilizar el algoritmo Hill Climbing o 1 para Simulated Annealing:");
-//        int algoritmoSeleccionado = scanner.nextInt();
+            System.out.println("Introduce 0 para utilizar el algoritmo Hill Climbing o 1 para Simulated Annealing:");
+            int algoritmoSeleccionado = scanner.nextInt();
 
             System.out.println("Introduce 0 para utilizar el primer generador de solución inicial o 1 para el segundo:");
             int generadorSeleccionado = scanner.nextInt();
 
             // TODO: añadir la seleccion del conjunto de operadores
 
-//        System.out.println("Introduce 0 para utilizar el primer heurístico o 1 para el segundo:");
-//        int heuristicoSeleccionado = scanner.nextInt();
+            System.out.println("Introduce 0 para utilizar el primer heurístico o 1 para el segundo:");
+            int heuristicoSeleccionado = scanner.nextInt();
 
 
             // Empezamos solucion inicial ------------------------------
@@ -47,17 +48,19 @@ public class BicingProblem {
             if (generadorSeleccionado == 0) {
                 solucionInicial.generadorSolucion1();
             } else {
-                solucionInicial.generadorSolucion2();
+                //solucionInicial.generadorSolucion2();
             }
 
             System.out.println("FINAL DE LA GENERACION");
             System.out.println("****************************************************");
             printInfoEstaciones(solucionInicial);
             printBeneficiosMaximosPosibles(solucionInicial);
-            System.out.println(String.format("BENEFICIOS - COSTE POR FALLOS: '%s'", solucionInicial.getBeneficios()));
+            System.out.println(String.format("BENEFICIOS - COSTE POR FALLOS: '%s'", solucionInicial.getBeneficioPorAcierto() - solucionInicial.getPenalizacionPorFallo()));
+            System.out.println(String.format("BENEFICIOS: '%s'", solucionInicial.getBeneficioPorAcierto()));
+            System.out.println(String.format("COSTE POR FALLOS: '%s'", solucionInicial.getPenalizacionPorFallo()));
             System.out.println(String.format("COSTE POR TRANSPORTE: '%s'", solucionInicial.getCosteTransporte()));
 
-            BicingHillClimbingSearch(solucionInicial);
+            Bicing_Search(solucionInicial, algoritmoSeleccionado, heuristicoSeleccionado);
             printCoords(solucionInicial);
 
             mostrarMenu();
@@ -81,10 +84,21 @@ public class BicingProblem {
         System.out.println("Introduce 0 para iniciar un nuevo problema Bicing o 1 para salir");
     }
 
-    private static void BicingHillClimbingSearch(BicingSolution solution) {
+    private static void Bicing_Search(BicingSolution solution, int algoritmoSeleccionado, int heuristicoSeleccionado) {
         try {
-            Problem problem = new Problem(solution, new BicingSuccessorFunction(), new BicingGoalTest(), new BicingHeuristicFunction1());
-            Search search = new HillClimbingSearch();
+            Problem problem;
+            if (heuristicoSeleccionado == 0) {
+                problem = new Problem(solution, new BicingSuccessorFunction(), new BicingGoalTest(), new BicingHeuristicFunction1());
+            } else {
+                problem = new Problem(solution, new BicingSuccessorFunction(), new BicingGoalTest(), new BicingHeuristicFunction2());
+            }
+
+            Search search;
+            if (algoritmoSeleccionado == 0) {
+                search = new HillClimbingSearch();
+            } else {
+                search = new SimulatedAnnealingSearch();
+            }
             long startTime = System.currentTimeMillis();
             SearchAgent agent = new SearchAgent(problem, search); // TODO: ignorar System.out.println para calcular el tiempo correctamente
             long endTime = System.currentTimeMillis();
@@ -95,12 +109,17 @@ public class BicingProblem {
             printInstrumentation(agent.getInstrumentation());
             System.out.print(((BicingSolution) search.getGoalState()).toString());
             BicingSolution goalSolution = ((BicingSolution) search.getGoalState());
-            System.out.println(String.format("FINAL : BENEFICIOS - COSTE POR FALLOS: '%s'", goalSolution.getBeneficios()));
+            System.out.println(String.format("FINAL: BENEFICIOS - COSTE POR FALLOS: '%s'", goalSolution.getBeneficioPorAcierto() - goalSolution.getPenalizacionPorFallo()));
+            System.out.println(String.format("FINAL: BENEFICIOS: '%s'", goalSolution.getBeneficioPorAcierto()));
+            System.out.println(String.format("FINAL: COSTE POR FALLOS: '%s'", goalSolution.getPenalizacionPorFallo()));
             System.out.println(String.format("FINAL: COSTE POR TRANSPORTE: '%s'", goalSolution.getCosteTransporte()));
+            System.out.println(String.format("FINAL: TOTAL GANADO: '%s'", goalSolution.getBeneficioPorAcierto() - goalSolution.getPenalizacionPorFallo() - goalSolution.getCosteTransporte()));
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
+
 
     private static void printActions(List actions) {
         for (int i = 0; i < actions.size(); i++) {
