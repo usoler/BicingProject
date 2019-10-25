@@ -98,7 +98,8 @@ public class BicingProblem {
                 search = new HillClimbingSearch();
             } else {
                 successorFunction = new BicingSuccessorFunction2();
-                search = new SimulatedAnnealingSearch();
+//                search = new SimulatedAnnealingSearch();
+                search = new SimulatedAnnealingSearch(10000, 100, 5, 0.001);
             }
 
             Problem problem = new Problem(solution, successorFunction, new BicingGoalTest(), heuristicFunction);
@@ -109,7 +110,7 @@ public class BicingProblem {
 
             System.out.println(String.format("Time = '%s' ms", (endTime - startTime)));
 
-            printActions(agent.getActions());
+//            printActions(agent.getActions());
             printInstrumentation(agent.getInstrumentation());
             System.out.print(((BicingSolution) search.getGoalState()).toString());
             BicingSolution goalSolution = ((BicingSolution) search.getGoalState());

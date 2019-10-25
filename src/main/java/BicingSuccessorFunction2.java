@@ -17,6 +17,8 @@ public class BicingSuccessorFunction2 implements SuccessorFunction {
         BicingSolution nuevaSolution = new BicingSolution(solution);
         Random generatorRandom = new Random();
 
+        int contador = 10; // Para salir de un bucle despues de 1000 iteraciones
+
         int operadorRandom = generatorRandom.nextInt(NUM_OF_OPERATORS);
 
         int idFurgonetaRandom;
@@ -27,9 +29,11 @@ public class BicingSuccessorFunction2 implements SuccessorFunction {
                 idFurgonetaRandom = generatorRandom.nextInt(solution.getAsignaciones().length);
                 idEstacionRandom = generatorRandom.nextInt(solution.getEstaciones().size());
 
-                while (!nuevaSolution.moverFurgoneta(idFurgonetaRandom, idEstacionRandom)) { // En caso de no ser un sucesor valido, buscamnos otro
+                while ((contador > 0) && (!nuevaSolution.moverFurgoneta(idFurgonetaRandom, idEstacionRandom))) { // En caso de no ser un sucesor valido, buscamnos otro
+                    nuevaSolution = new BicingSolution(solution);
                     idFurgonetaRandom = generatorRandom.nextInt(solution.getAsignaciones().length);
                     idEstacionRandom = generatorRandom.nextInt(solution.getEstaciones().size());
+                    --contador;
                 }
 
                 actionMessage = String.format("Furgoneta con id = '%s' movida a estacion con id = '%s'",
@@ -41,10 +45,12 @@ public class BicingSuccessorFunction2 implements SuccessorFunction {
                 idEstacionRandom = generatorRandom.nextInt(solution.getEstaciones().size());
                 int destinoUnoODos = generatorRandom.nextInt(NUM_MAX_DESTINOS);
 
-                while (!nuevaSolution.cambiarEstacionDestino(idFurgonetaRandom, destinoUnoODos, idEstacionRandom)) {
+                while ((contador > 0) && (!nuevaSolution.cambiarEstacionDestino(idFurgonetaRandom, destinoUnoODos, idEstacionRandom))) {
+                    nuevaSolution = new BicingSolution(solution);
                     idFurgonetaRandom = generatorRandom.nextInt(solution.getAsignaciones().length);
                     idEstacionRandom = generatorRandom.nextInt(solution.getEstaciones().size());
                     destinoUnoODos = generatorRandom.nextInt(NUM_MAX_DESTINOS);
+                    --contador;
                 }
 
                 actionMessage = String.format("Furgoneta con id = '%s', y origen '%s', cambiado el destino '%s' " +
@@ -56,9 +62,11 @@ public class BicingSuccessorFunction2 implements SuccessorFunction {
                 idFurgonetaRandom = generatorRandom.nextInt(solution.getAsignaciones().length);
                 int idFurgonetaAIntercambiarRandom = generatorRandom.nextInt(solution.getAsignaciones().length);
 
-                while (!nuevaSolution.intercambiarFurgonetas(idFurgonetaRandom, idFurgonetaAIntercambiarRandom)) {
+                while ((contador > 0) && (!nuevaSolution.intercambiarFurgonetas(idFurgonetaRandom, idFurgonetaAIntercambiarRandom))) {
+                    nuevaSolution = new BicingSolution(solution);
                     idFurgonetaRandom = generatorRandom.nextInt(solution.getAsignaciones().length);
                     idFurgonetaAIntercambiarRandom = generatorRandom.nextInt(solution.getAsignaciones().length);
+                    --contador;
                 }
 
                 actionMessage = String.format("Furgoneta con id = '%s' intercambiada por furgoneta " +
@@ -70,10 +78,12 @@ public class BicingSuccessorFunction2 implements SuccessorFunction {
                 int numPrimerasBicisRandom = generatorRandom.nextInt(NUM_MAX_BICIS);
                 int numSegundasBicisRandom = generatorRandom.nextInt(NUM_MAX_BICIS);
 
-                while (!nuevaSolution.cargarFurgoneta(idFurgonetaRandom, numPrimerasBicisRandom, numSegundasBicisRandom)) {
+                while ((contador > 0) && (!nuevaSolution.cargarFurgoneta(idFurgonetaRandom, numPrimerasBicisRandom, numSegundasBicisRandom))) {
+                    nuevaSolution = new BicingSolution(solution);
                     idFurgonetaRandom = generatorRandom.nextInt(solution.getAsignaciones().length);
                     numPrimerasBicisRandom = generatorRandom.nextInt(NUM_MAX_BICIS);
                     numSegundasBicisRandom = generatorRandom.nextInt(NUM_MAX_BICIS);
+                    --contador;
                 }
 
                 if (numSegundasBicisRandom == 0) { // Para mostrar el mensaje correcto del swap
