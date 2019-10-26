@@ -4,7 +4,7 @@ import aima.search.framework.SuccessorFunction;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BicingSuccessorFunction implements SuccessorFunction {
+public class BicingSuccessorFunction1 implements SuccessorFunction {
     private static final int NUM_MAX_DESTINOS = 2;
     private static final int NUM_MAX_BICIS = 30;
 
