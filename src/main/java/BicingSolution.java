@@ -21,10 +21,9 @@ public class BicingSolution {
     private int[] primerasBicisDejadas;         // i->id furgoneta, [i]->número de bicis dejadas [Memoria O(|F|)]
     private int[] segundasBicisDejadas;         // i->id furgoneta, [i]->número de bicis dejadas [Memoria O(|F|)]
 
+    private int beneficioPorAcierto;            // Beneficio obtenido por acierto
+    private int penalizacionPorFallo;           // Penalizacion obtenida por fallo
     private double costeTransporte;             // Coste por transporte al final de la hora
-    //    private int beneficios;                     // Beneficios en euros obtenidos al final de la hora (se le restan los costes por fallo)
-    private int beneficioPorAcierto;
-    private int penalizacionPorFallo;
 
     // ------------------------------------------------------------------------
     // Constructores
@@ -44,7 +43,6 @@ public class BicingSolution {
 
         initArraysWith(numFurgonetas);
 
-//        this.beneficios = 0;
         this.beneficioPorAcierto = 0;
         this.penalizacionPorFallo = 0;
         this.costeTransporte = 0.0;
@@ -63,7 +61,6 @@ public class BicingSolution {
         initArraysWith(numFurgonetas);
         copyArraysFrom(solution);
 
-//        this.beneficios = solution.getBeneficios();
         this.beneficioPorAcierto = solution.getBeneficioPorAcierto();
         this.penalizacionPorFallo = solution.getPenalizacionPorFallo();
         this.costeTransporte = solution.getCosteTransporte();
@@ -83,7 +80,7 @@ public class BicingSolution {
         estacionesAsignadas = inicializarArrayBooleana(estacionesAsignadas);        // O(|E|)
 
         for (int i = 0; i < this.realBicisNext.length; ++i) {
-            realBicisNext[i] = this.estaciones.get(i).getNumBicicletasNext();
+            realBicisNext[i] = this.estaciones.get(i).getNumBicicletasNext();   // O(E)
         }
 
         for (int i = 0; i < this.asignaciones.length; ++i) {                        // O(|F|)
@@ -104,18 +101,18 @@ public class BicingSolution {
 
     /**
      * Genera una solucion inicial que distribuye las furgonetas disponibles entre las estaciones mas prosperas.
-     * Asigna a cadxa furgoneta entre 0 y 2 estaciones destino con deficit dentro de un radio de distancia de X km.
+     * Asigna a cada furgoneta entre 0 y 2 estaciones destino con deficit dentro de un radio de distancia de X km.
      */
 
     public void generadorSolucion2() {
-        int[] estacionesProsperas = initArrayEstacionesProsperas(); // Estaciones ordenadas de mas prospera a menos
+        int[] estacionesProsperas = initArrayEstacionesProsperas(); // Estaciones ordenadas de mas prospera a menos // O(E)
 
         for (int i = 0; i < this.realBicisNext.length; ++i) {
-            realBicisNext[i] = this.estaciones.get(i).getNumBicicletasNext();
+            realBicisNext[i] = this.estaciones.get(i).getNumBicicletasNext(); // O(E)
         }
 
         System.out.println("ESTACIONES ORDENADAS PROSPERAMENTE");
-        for (int a = 0; a < estacionesProsperas.length; ++a) {
+        for (int a = 0; a < estacionesProsperas.length; ++a) { // O(E)
             System.out.println(String.format("Posicion #%s:  estacion con id '%s'",
                     a, estacionesProsperas[a]));
         }
@@ -124,21 +121,21 @@ public class BicingSolution {
         mergeSort(estacionesDeficit, 0, estacionesDeficit.length - 1, false); // O(|E|log|E|)
 
         int[] numBicisFaltantes = new int[estacionesDeficit.length];
-        numBicisFaltantes = inicializarArrayBicisFaltantes(estacionesDeficit, numBicisFaltantes);
+        numBicisFaltantes = inicializarArrayBicisFaltantes(estacionesDeficit, numBicisFaltantes); // O(E)
 
         System.out.println("ESTACIONES CON DEFICIT ORDENADAS");
         for (int b = 0; b < estacionesDeficit.length; ++b) {
-            System.out.println(String.format("Posicion #%s:  estacion con id '%s'",
+            System.out.println(String.format("Posicion #%s:  estacion con id '%s'", // O(E)
                     b, estacionesDeficit[b]));
         }
         int index = 0;
-        for (int i = 0; i < this.asignaciones.length; ++i) {
-            asignarFurgonetaEnEstacionProspera(i, estacionesProsperas);
+        for (int i = 0; i < this.asignaciones.length; ++i) { // O(F)
+            asignarFurgonetaEnEstacionProspera(i, estacionesProsperas); // O(1)
 
-            if (index < numBicisFaltantes.length) {
+            if (index < numBicisFaltantes.length) { // O(1)
                 asignarDestinosConDeficit(i, estacionesDeficit, index);
 
-                numBicisFaltantes = asignarCargaDestinosConDeficit(i, numBicisFaltantes, index);
+                numBicisFaltantes = asignarCargaDestinosConDeficit(i, numBicisFaltantes, index); // O(1)
 
                 if ((numBicisFaltantes[index] == 0) && (index + 1 < numBicisFaltantes.length) && (numBicisFaltantes[index + 1] == 0)) {
                     System.out.println(String.format("Este indice '%s' y el siguiente '%s' ya cubiertos", index, index + 1));
@@ -148,7 +145,7 @@ public class BicingSolution {
                     ++index;
                 }
 
-                calcularCosteTransporte(i);
+                calcularCosteTransporte(i); // O(1)
 
             } else { // destinos con deficit ya cubiertos
                 System.out.println("Todos los destinos con deficit ya cubiertos");
@@ -279,7 +276,7 @@ public class BicingSolution {
     /**
      * Cargar furgoneta con id 'idFurgoneta' con 'numBicis1' bicis en su primer destino y 'numBicis2' en su segundo destino
      * <p>
-     * Factor ramificación: O(31 * F * F)
+     * Factor ramificación: O(F * 31 * 31)
      *
      * @param idFurgoneta id de la furgoneta a la que cargar las bicis
      * @param numBicis1   número de bicis que cargar en el destino1
@@ -465,9 +462,6 @@ public class BicingSolution {
         return this.segundasBicisDejadas;
     }
 
-    //    public int getBeneficios() {
-//        return this.beneficios;
-//    }
     public int getBeneficioPorAcierto() {
         return this.beneficioPorAcierto;
     }
@@ -836,9 +830,7 @@ public class BicingSolution {
                 System.out.println(String.format("Deshacemos beneficio a acumular (cargaADejar): '%s'", maxBeneficios));
             }
         }
-
     }
-
 
     /**
      * Calcula el coste de transporte que tendrá una furgoneta con idFurgoneta. (nb + 9)/10
@@ -905,7 +897,6 @@ public class BicingSolution {
             }
         }
     }
-
 
     /**
      * Deshace el coste por los fallos de la furgoneta con idFurgoneta

@@ -104,7 +104,7 @@ public class BicingProblem {
             Problem problem = new Problem(solution, successorFunction, new BicingGoalTest(), heuristicFunction);
 
             long startTime = System.currentTimeMillis();
-            SearchAgent agent = new SearchAgent(problem, search); // TODO: ignorar System.out.println para calcular el tiempo correctamente
+            SearchAgent agent = new SearchAgent(problem, search);
             long endTime = System.currentTimeMillis();
 
             System.out.println(String.format("Time = '%s' ms", (endTime - startTime)));
