@@ -98,7 +98,6 @@ public class BicingProblem {
                 search = new HillClimbingSearch();
             } else {
                 successorFunction = new BicingSuccessorFunction2();
-//                search = new SimulatedAnnealingSearch();
                 search = new SimulatedAnnealingSearch(10000, 100, 5, 0.001);
             }
 
@@ -110,15 +109,19 @@ public class BicingProblem {
 
             System.out.println(String.format("Time = '%s' ms", (endTime - startTime)));
 
-//            printActions(agent.getActions());
-            printInstrumentation(agent.getInstrumentation());
+            if (algoritmoSeleccionado == 0) {
+                printActions(agent.getActions());
+                printInstrumentation(agent.getInstrumentation());
+            }
+
             System.out.print(((BicingSolution) search.getGoalState()).toString());
             BicingSolution goalSolution = ((BicingSolution) search.getGoalState());
             System.out.println(String.format("FINAL: BENEFICIOS - COSTE POR FALLOS: '%s'", goalSolution.getBeneficioPorAcierto() - goalSolution.getPenalizacionPorFallo()));
             System.out.println(String.format("FINAL: BENEFICIOS: '%s'", goalSolution.getBeneficioPorAcierto()));
             System.out.println(String.format("FINAL: COSTE POR FALLOS: '%s'", goalSolution.getPenalizacionPorFallo()));
             System.out.println(String.format("FINAL: COSTE POR TRANSPORTE: '%s'", goalSolution.getCosteTransporte()));
-            System.out.println(String.format("FINAL: TOTAL GANADO: '%s'", goalSolution.getBeneficioPorAcierto() - goalSolution.getPenalizacionPorFallo() - goalSolution.getCosteTransporte()));
+            System.out.println(String.format("FINAL: TOTAL GANADO (1): '%s'", goalSolution.getBeneficioPorAcierto() - goalSolution.getPenalizacionPorFallo()));
+            System.out.println(String.format("FINAL: TOTAL GANADO (2): '%s'", goalSolution.getBeneficioPorAcierto() - goalSolution.getPenalizacionPorFallo() - goalSolution.getCosteTransporte()));
 
         } catch (Exception ex) {
             ex.printStackTrace();
