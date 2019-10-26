@@ -3,19 +3,25 @@ import aima.search.framework.*;
 import aima.search.informed.HillClimbingSearch;
 import aima.search.informed.SimulatedAnnealingSearch;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
+
+import static java.lang.StrictMath.sqrt;
 
 public class BicingProblem {
 
     // TODO: añadir bucle y menú de opciones
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Scanner scanner = new Scanner(System.in);
         mostrarMenu();
         int end = scanner.nextInt();
         while (end != 1) {
             Random random = new Random();
-            int semilla = random.nextInt();
 
             System.out.println("Introduce el número de estaciones, el número de bicis, el número de furgonetas y el tipo " +
                     "demanda (0: equilibrada o 1: punta):"); // Por defecto, la semilla es aleatoria
@@ -37,29 +43,75 @@ public class BicingProblem {
             System.out.println("Introduce 0 para utilizar el primer heurístico o 1 para el segundo:");
             int heuristicoSeleccionado = scanner.nextInt();
 
+            int test = 10;
+            int[] beneficios = new int[test];
+            long[] tiempo = new long[test];
 
             // Empezamos solucion inicial ------------------------------
-            BicingSolution solucionInicial = new BicingSolution(numeroEstaciones, numeroBicisTotal, numeroFurgonetas, tipoDemanda,
-                    semilla);
-            System.out.println("EMPEZAMOS LA GENERACION");
+            for(int i  = 0; i < test; ++i) {
+                long startTime = System.currentTimeMillis();
+                int semilla = random.nextInt();
+                BicingSolution solucionInicial = new BicingSolution(numeroEstaciones, numeroBicisTotal, numeroFurgonetas, tipoDemanda,
+                        semilla);
+                //System.out.println("EMPEZAMOS LA GENERACION");
 
-            if (generadorSeleccionado == 0) {
-                solucionInicial.generadorSolucion1();
-            } else {
-                solucionInicial.generadorSolucion2();
+                if (generadorSeleccionado == 0) {
+                    solucionInicial.generadorSolucion1();
+                } else {
+                    solucionInicial.generadorSolucion2();
+                }
+
+//            System.out.println("FINAL DE LA GENERACION");
+//            System.out.println("****************************************************");
+//            printInfoEstaciones(solucionInicial);
+//            printBeneficiosMaximosPosibles(solucionInicial);
+//            System.out.println(String.format("BENEFICIOS - COSTE POR FALLOS: '%s'", solucionInicial.getBeneficioPorAcierto() - solucionInicial.getPenalizacionPorFallo()));
+//            System.out.println(String.format("BENEFICIOS: '%s'", solucionInicial.getBeneficioPorAcierto()));
+//            System.out.println(String.format("COSTE POR FALLOS: '%s'", solucionInicial.getPenalizacionPorFallo()));
+//            System.out.println(String.format("COSTE POR TRANSPORTE: '%s'", solucionInicial.getCosteTransporte()));
+
+                beneficios[i] = Bicing_Search(solucionInicial, algoritmoSeleccionado, heuristicoSeleccionado);
+                long endTime = System.currentTimeMillis();
+                tiempo[i] = endTime - startTime;
+            }
+            //printCoords(solucionInicial);
+            String nombreFichero = "todosLosOperadores";
+            String pathname = "C:\\Users\\Fede\\Desktop\\code\\GitKraken\\BicingProject\\src\\main\\resources\\" + nombreFichero + ".csv";
+            File csvFile = new File(pathname);
+            FileWriter writer = new FileWriter(csvFile);
+
+
+            CSVUtils.writeLine(writer, Arrays.asList(nombreFichero));
+            CSVUtils.writeLine(writer, Arrays.asList("Experimento", "Beneficios", "Tiempo de ejecución"));
+            int beneficiosAcumulados = 0;
+            int tiempoAcumulado = 0;
+            for(int i = 0; i < test; ++i) {
+                System.out.println(String.format("BENEFICIOS - COSTE POR FALLOS: '%s'", beneficios[i]));
+                System.out.println(String.format("TIEMPO DE EJECUCIÓN: '%s'", tiempo[i]));
+
+                CSVUtils.writeLine(writer, Arrays.asList(Integer.toString(i+1), Integer.toString(beneficios[i]), Long.toString(tiempo[i])));
+                beneficiosAcumulados += beneficios[i];
+                tiempoAcumulado += tiempo[i];
             }
 
-            System.out.println("FINAL DE LA GENERACION");
-            System.out.println("****************************************************");
-            printInfoEstaciones(solucionInicial);
-            printBeneficiosMaximosPosibles(solucionInicial);
-            System.out.println(String.format("BENEFICIOS - COSTE POR FALLOS: '%s'", solucionInicial.getBeneficioPorAcierto() - solucionInicial.getPenalizacionPorFallo()));
-            System.out.println(String.format("BENEFICIOS: '%s'", solucionInicial.getBeneficioPorAcierto()));
-            System.out.println(String.format("COSTE POR FALLOS: '%s'", solucionInicial.getPenalizacionPorFallo()));
-            System.out.println(String.format("COSTE POR TRANSPORTE: '%s'", solucionInicial.getCosteTransporte()));
+            double mediaBeneficios = (double) beneficiosAcumulados / test;
+            double mediaTiempo = (double) tiempoAcumulado / test;
+            double desvTipusBen = 0;
+            double desvTipusTiem = 0;
+            for (int i = 0; i < test; ++i){
+                desvTipusBen += Math.pow((beneficios[i] - mediaBeneficios), 2);
+                desvTipusTiem += Math.pow((tiempo[i] - mediaTiempo), 2);
+            }
+            desvTipusBen = sqrt(desvTipusBen/test);
+            desvTipusTiem = sqrt(desvTipusTiem/test);
 
-            Bicing_Search(solucionInicial, algoritmoSeleccionado, heuristicoSeleccionado);
-            printCoords(solucionInicial);
+            desvTipusBen = BigDecimal.valueOf(desvTipusBen).setScale(3, RoundingMode.HALF_UP).doubleValue();
+            desvTipusTiem = BigDecimal.valueOf(desvTipusTiem).setScale(3, RoundingMode.HALF_UP).doubleValue();
+
+            CSVUtils.writeLine(writer, Arrays.asList("Mitjana (desv. típica)", mediaBeneficios +" ("+
+                    desvTipusBen +")", mediaTiempo + " ("+ desvTipusTiem +")"));
+            writer.flush();
+            writer.close();
 
             mostrarMenu();
             end = scanner.nextInt();
@@ -67,22 +119,22 @@ public class BicingProblem {
     }
 
     private static void mostrarMenu() {
-        System.out.println("***********************************");
-        System.out.println("********    B I C I N G    ********");
-        System.out.println("***********************************");
-        System.out.println(" ");
-        System.out.println("Problema de búsqueda local");
-        System.out.println(" ");
-        System.out.println("Miembros del equipo:");
-        System.out.println("   - Federico Rubinstein");
-        System.out.println("   - Roger González Herrera");
-        System.out.println("   - Luis Oriol Soler Cruz");
+//        System.out.println("***********************************");
+//        System.out.println("********    B I C I N G    ********");
+//        System.out.println("***********************************");
+//        System.out.println(" ");
+//        System.out.println("Problema de búsqueda local");
+//        System.out.println(" ");
+//        System.out.println("Miembros del equipo:");
+//        System.out.println("   - Federico Rubinstein");
+//        System.out.println("   - Roger González Herrera");
+//        System.out.println("   - Luis Oriol Soler Cruz");
         System.out.println(" ");
         System.out.println(" ");
         System.out.println("Introduce 0 para iniciar un nuevo problema Bicing o 1 para salir");
     }
 
-    private static void Bicing_Search(BicingSolution solution, int algoritmoSeleccionado, int heuristicoSeleccionado) {
+    private static int Bicing_Search(BicingSolution solution, int algoritmoSeleccionado, int heuristicoSeleccionado) {
         try {
             HeuristicFunction heuristicFunction;
             if (heuristicoSeleccionado == 0) {
@@ -103,29 +155,30 @@ public class BicingProblem {
 
             Problem problem = new Problem(solution, successorFunction, new BicingGoalTest(), heuristicFunction);
 
-            long startTime = System.currentTimeMillis();
             SearchAgent agent = new SearchAgent(problem, search); // TODO: ignorar System.out.println para calcular el tiempo correctamente
-            long endTime = System.currentTimeMillis();
 
-            System.out.println(String.format("Time = '%s' ms", (endTime - startTime)));
 
-            if (algoritmoSeleccionado == 0) {
-                printActions(agent.getActions());
-                printInstrumentation(agent.getInstrumentation());
-            }
+            //System.out.println(String.format("Time = '%s' ms", (endTime - startTime)));
 
-            System.out.print(((BicingSolution) search.getGoalState()).toString());
+//            if (algoritmoSeleccionado == 0) {
+//                printActions(agent.getActions());
+//                printInstrumentation(agent.getInstrumentation());
+//            }
+
+            //System.out.print(((BicingSolution) search.getGoalState()).toString());
             BicingSolution goalSolution = ((BicingSolution) search.getGoalState());
-            System.out.println(String.format("FINAL: BENEFICIOS - COSTE POR FALLOS: '%s'", goalSolution.getBeneficioPorAcierto() - goalSolution.getPenalizacionPorFallo()));
-            System.out.println(String.format("FINAL: BENEFICIOS: '%s'", goalSolution.getBeneficioPorAcierto()));
-            System.out.println(String.format("FINAL: COSTE POR FALLOS: '%s'", goalSolution.getPenalizacionPorFallo()));
-            System.out.println(String.format("FINAL: COSTE POR TRANSPORTE: '%s'", goalSolution.getCosteTransporte()));
-            System.out.println(String.format("FINAL: TOTAL GANADO (1): '%s'", goalSolution.getBeneficioPorAcierto() - goalSolution.getPenalizacionPorFallo()));
-            System.out.println(String.format("FINAL: TOTAL GANADO (2): '%s'", goalSolution.getBeneficioPorAcierto() - goalSolution.getPenalizacionPorFallo() - goalSolution.getCosteTransporte()));
+            return goalSolution.getBeneficioPorAcierto() - goalSolution.getPenalizacionPorFallo();
+//            System.out.println(String.format("FINAL: BENEFICIOS - COSTE POR FALLOS: '%s'", goalSolution.getBeneficioPorAcierto() - goalSolution.getPenalizacionPorFallo()));
+//            System.out.println(String.format("FINAL: BENEFICIOS: '%s'", goalSolution.getBeneficioPorAcierto()));
+//            System.out.println(String.format("FINAL: COSTE POR FALLOS: '%s'", goalSolution.getPenalizacionPorFallo()));
+//            System.out.println(String.format("FINAL: COSTE POR TRANSPORTE: '%s'", goalSolution.getCosteTransporte()));
+//            System.out.println(String.format("FINAL: TOTAL GANADO (1): '%s'", goalSolution.getBeneficioPorAcierto() - goalSolution.getPenalizacionPorFallo()));
+//            System.out.println(String.format("FINAL: TOTAL GANADO (2): '%s'", goalSolution.getBeneficioPorAcierto() - goalSolution.getPenalizacionPorFallo() - goalSolution.getCosteTransporte()));
 
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        return 0;
     }
 
 

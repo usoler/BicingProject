@@ -73,14 +73,14 @@ public class BicingSuccessorFunction1 implements SuccessorFunction {
             }
         }
 
-        printSuccessors(successors);
-
-        System.out.println("--------------------------------------------------------");
-        System.out.println("--------------------------------------------------------");
-        System.out.println(String.format("Numero de espacio: %s", contadorEspacio));
-        System.out.println(String.format("Numero de sucesores: %s", successors.size()));
-        System.out.println("--------------------------------------------------------");
-        System.out.println("--------------------------------------------------------");
+//        printSuccessors(successors);
+//
+//        System.out.println("--------------------------------------------------------");
+//        System.out.println("--------------------------------------------------------");
+//        System.out.println(String.format("Numero de espacio: %s", contadorEspacio));
+//        System.out.println(String.format("Numero de sucesores: %s", successors.size()));
+//        System.out.println("--------------------------------------------------------");
+//        System.out.println("--------------------------------------------------------");
 
         return successors;
     }
