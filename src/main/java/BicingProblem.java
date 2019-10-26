@@ -75,7 +75,7 @@ public class BicingProblem {
                 tiempo[i] = endTime - startTime;
             }
             //printCoords(solucionInicial);
-            String nombreFichero = "todosMenosMoverFurgo";
+            String nombreFichero = "todosMenosIntercambiarFurgo";
             String pathname = "C:\\Users\\Fede\\Desktop\\code\\GitKraken\\BicingProject\\src\\main\\resources\\" + nombreFichero + ".csv";
             File csvFile = new File(pathname);
             FileWriter writer = new FileWriter(csvFile);
