@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2ff90e44-3912-4411-8f2a-fd0040f194bf" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/BicingProblem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BicingProblem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/BicingSuccessorFunction1.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/BicingSuccessorFunction1.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/todosLosOperadores.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/todosMenosIntercambiarFurgo.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/todosMenosMoverFurgo.csv" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

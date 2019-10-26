@@ -49,33 +49,31 @@ public class BicingProblem {
 
             // Empezamos solucion inicial ------------------------------
             for(int i  = 0; i < test; ++i) {
-                long startTime = System.currentTimeMillis();
-                int semilla = random.nextInt();
-                BicingSolution solucionInicial = new BicingSolution(numeroEstaciones, numeroBicisTotal, numeroFurgonetas, tipoDemanda,
-                        semilla);
-                //System.out.println("EMPEZAMOS LA GENERACION");
+                int beneficiosj = 0;
+                long tiempoj = 0;
+                for(int j = 0; j < 10; ++j) {
+                    long startTime = System.currentTimeMillis();
+                    int semilla = random.nextInt();
+                    BicingSolution solucionInicial = new BicingSolution(numeroEstaciones, numeroBicisTotal, numeroFurgonetas, tipoDemanda,
+                            semilla);
+                    //System.out.println("EMPEZAMOS LA GENERACION");
 
-                if (generadorSeleccionado == 0) {
-                    solucionInicial.generadorSolucion1();
-                } else {
-                    solucionInicial.generadorSolucion2();
+                    if (generadorSeleccionado == 0) {
+                        solucionInicial.generadorSolucion1();
+                    } else {
+                        solucionInicial.generadorSolucion2();
+                    }
+
+                    beneficiosj += Bicing_Search(solucionInicial, algoritmoSeleccionado, heuristicoSeleccionado);
+                    long endTime = System.currentTimeMillis();
+                    tiempoj += (endTime - startTime);
+
                 }
-
-//            System.out.println("FINAL DE LA GENERACION");
-//            System.out.println("****************************************************");
-//            printInfoEstaciones(solucionInicial);
-//            printBeneficiosMaximosPosibles(solucionInicial);
-//            System.out.println(String.format("BENEFICIOS - COSTE POR FALLOS: '%s'", solucionInicial.getBeneficioPorAcierto() - solucionInicial.getPenalizacionPorFallo()));
-//            System.out.println(String.format("BENEFICIOS: '%s'", solucionInicial.getBeneficioPorAcierto()));
-//            System.out.println(String.format("COSTE POR FALLOS: '%s'", solucionInicial.getPenalizacionPorFallo()));
-//            System.out.println(String.format("COSTE POR TRANSPORTE: '%s'", solucionInicial.getCosteTransporte()));
-
-                beneficios[i] = Bicing_Search(solucionInicial, algoritmoSeleccionado, heuristicoSeleccionado);
-                long endTime = System.currentTimeMillis();
-                tiempo[i] = endTime - startTime;
+                beneficios[i] =  beneficiosj / 10;
+                tiempo[i] = tiempoj / 10;
             }
             //printCoords(solucionInicial);
-            String nombreFichero = "todosMenosIntercambiarFurgo";
+            String nombreFichero = "sinFurgoGeneracioIni2";
             String pathname = "C:\\Users\\Fede\\Desktop\\code\\GitKraken\\BicingProject\\src\\main\\resources\\" + nombreFichero + ".csv";
             File csvFile = new File(pathname);
             FileWriter writer = new FileWriter(csvFile);
