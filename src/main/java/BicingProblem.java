@@ -61,7 +61,7 @@ public class BicingProblem {
                     System.out.println(String.format("Segon bucle: '%s'", j));
                     long startTime = System.currentTimeMillis();
 
-                    BicingSolution solucionInicial = new BicingSolution(numEstacionesj, numBicisj, numFurgosj, TipoDemanda.EQUILIBRADA,
+                    BicingSolution solucionInicial = new BicingSolution(numEstacionesj, numBicisj, numFurgosj, TipoDemanda.PUNTA,
                             semilla);
 
                     solucionInicial.generadorSolucion1();
@@ -69,7 +69,7 @@ public class BicingProblem {
 
                     //beneficiosInij += (solucionInicial.getBeneficioPorAcierto() - solucionInicial.getPenalizacionPorFallo());
                     //beneficiosj += Bicing_Search(solucionInicial, algoritmoSeleccionado, heuristicoSeleccionado);
-                    Bicing_Search(solucionInicial, 0, 0); // HillClimbing & Heuristico1
+                    Bicing_Search(solucionInicial, 1, 0); // HillClimbing & Heuristico1
 
                     long endTime = System.currentTimeMillis();
                     //tiempoj += (endTime - startTime);
@@ -178,7 +178,7 @@ public class BicingProblem {
                 search = new HillClimbingSearch();
             } else {
                 successorFunction = new BicingSuccessorFunction2();
-                search = new SimulatedAnnealingSearch(10000, 100, 5, 0.001);
+                search = new SimulatedAnnealingSearch(10000, 100, 125, 0.001);
             }
 
             Problem problem = new Problem(solution, successorFunction, new BicingGoalTest(), heuristicFunction);
