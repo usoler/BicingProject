@@ -43,85 +43,47 @@ public class BicingProblem {
             System.out.println("Introduce 0 para utilizar el primer heurístico o 1 para el segundo:");
             int heuristicoSeleccionado = scanner.nextInt();
 
-            int test = 10;
-            int[] beneficiosIni = new int[test];
-            int[] beneficios = new int[test];
-            long[] tiempo = new long[test];
 
-            // Empezamos solucion inicial ------------------------------
-            for(int i  = 0; i < test; ++i) {
-                int beneficiosj = 0;
-                int beneficiosInij = 0;
-                long tiempoj = 0;
-                for(int j = 0; j < 10; ++j) {
-                    long startTime = System.currentTimeMillis();
-                    int semilla = random.nextInt();
-                    BicingSolution solucionInicial = new BicingSolution(numeroEstaciones, numeroBicisTotal, numeroFurgonetas, tipoDemanda,
-                            semilla);
-                    //System.out.println("EMPEZAMOS LA GENERACION");
 
-                    if (generadorSeleccionado == 0) {
-                        solucionInicial.generadorSolucion1();
-                    } else {
-                        solucionInicial.generadorSolucion2();
-                    }
-
-                    beneficiosInij += (solucionInicial.getBeneficioPorAcierto() - solucionInicial.getPenalizacionPorFallo());
-                    beneficiosj += Bicing_Search(solucionInicial, algoritmoSeleccionado, heuristicoSeleccionado);
-                    long endTime = System.currentTimeMillis();
-                    tiempoj += (endTime - startTime);
-
-                }
-                beneficiosIni[i] =  beneficiosInij / 10;
-                beneficios[i] =  beneficiosj / 10;
-                tiempo[i] = tiempoj / 10;
-            }
-            //printCoords(solucionInicial);
-            String nombreFichero = "sinFurgoGenerador2";
+            String nombreFichero = "Experimento_3";
             String pathname = "C:\\Users\\Fede\\Desktop\\code\\GitKraken\\BicingProject\\src\\main\\resources\\" + nombreFichero + ".csv";
             File csvFile = new File(pathname);
             FileWriter writer = new FileWriter(csvFile);
 
-
             CSVUtils.writeLine(writer, Arrays.asList(nombreFichero));
             CSVUtils.writeLine(writer, Arrays.asList("Experiment", "Beneficis Inicials", "Beneficis Finals", "Temps d'Execució (ms)"));
-            int beneficiosAcumuladosIni = 0;
-            int beneficiosAcumulados = 0;
-            int tiempoAcumulado = 0;
+
+            int test = 10;
+
+            // Empezamos solucion inicial ------------------------------
+            for(int i  = 0; i < test; ++i) {
+                int semilla = random.nextInt();
+                for(int j = 0; j < 100; ++j) {
+                    BicingSolution solucionInicial = new BicingSolution(numeroEstaciones, numeroBicisTotal, numeroFurgonetas, tipoDemanda,
+                            semilla);
+                    //System.out.println("EMPEZAMOS LA GENERACION");
+
+                    //if (generadorSeleccionado == 0) {
+                        solucionInicial.generadorSolucion1();
+//                    } else {
+//                        solucionInicial.generadorSolucion2();
+//                    }
+                    Bicing_Search(solucionInicial, algoritmoSeleccionado, heuristicoSeleccionado);
+
+                }
+            }
+            //printCoords(solucionInicial);
+
+
+
+
             for(int i = 0; i < test; ++i) {
-                System.out.println(String.format("BENEFICIOSini - COSTE POR FALLOSini: '%s'", beneficiosIni[i]));
-                System.out.println(String.format("BENEFICIOS - COSTE POR FALLOS: '%s'", beneficios[i]));
-                System.out.println(String.format("TIEMPO DE EJECUCIÓN: '%s'", tiempo[i]));
 
                 CSVUtils.writeLine(writer, Arrays.asList(Integer.toString(i+1), Integer.toString(beneficiosIni[i]),
                         Integer.toString(beneficios[i]), Long.toString(tiempo[i])));
 
-                beneficiosAcumuladosIni += beneficiosIni[i];
-                beneficiosAcumulados += beneficios[i];
-                tiempoAcumulado += tiempo[i];
             }
 
-            double mediaBeneficiosIni = (double) beneficiosAcumuladosIni / test;
-            double mediaBeneficios = (double) beneficiosAcumulados / test;
-            double mediaTiempo = (double) tiempoAcumulado / test;
-            double desvTipusBenIni = 0;
-            double desvTipusBen = 0;
-            double desvTipusTiem = 0;
-            for (int i = 0; i < test; ++i){
-                desvTipusBenIni += Math.pow((beneficiosIni[i] - mediaBeneficiosIni), 2);
-                desvTipusBen += Math.pow((beneficios[i] - mediaBeneficios), 2);
-                desvTipusTiem += Math.pow((tiempo[i] - mediaTiempo), 2);
-            }
-            desvTipusBenIni = sqrt(desvTipusBenIni/test);
-            desvTipusBen = sqrt(desvTipusBen/test);
-            desvTipusTiem = sqrt(desvTipusTiem/test);
-
-            desvTipusBenIni = BigDecimal.valueOf(desvTipusBenIni).setScale(3, RoundingMode.HALF_UP).doubleValue();
-            desvTipusBen = BigDecimal.valueOf(desvTipusBen).setScale(3, RoundingMode.HALF_UP).doubleValue();
-            desvTipusTiem = BigDecimal.valueOf(desvTipusTiem).setScale(3, RoundingMode.HALF_UP).doubleValue();
-
-            CSVUtils.writeLine(writer, Arrays.asList("Mitjana (desv. típica)", mediaBeneficiosIni +" ("+ desvTipusBenIni +")",
-                    mediaBeneficios +" ("+ desvTipusBen +")", mediaTiempo + " ("+ desvTipusTiem +")"));
             writer.flush();
             writer.close();
 
