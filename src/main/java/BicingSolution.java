@@ -42,6 +42,7 @@ public class BicingSolution {
     public BicingSolution(int numEstaciones, int numBicisTotal, int numFurgonetas, TipoDemanda tipoDemanda, int semilla) {
         this.estaciones = new Estaciones(numEstaciones, numBicisTotal, TipoDemanda.getCode(tipoDemanda), semilla);
 
+
         initArraysWith(numFurgonetas);
 
 //        this.beneficios = 0;

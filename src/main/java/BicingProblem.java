@@ -45,47 +45,49 @@ public class BicingProblem {
 
 
 
-            String nombreFichero = "Experimento_3";
-            String pathname = "C:\\Users\\Fede\\Desktop\\code\\GitKraken\\BicingProject\\src\\main\\resources\\" + nombreFichero + ".csv";
-            File csvFile = new File(pathname);
-            FileWriter writer = new FileWriter(csvFile);
 
-            CSVUtils.writeLine(writer, Arrays.asList(nombreFichero));
-            CSVUtils.writeLine(writer, Arrays.asList("Experiment", "Beneficis Inicials", "Beneficis Finals", "Temps d'Execució (ms)"));
 
             int test = 10;
 
             // Empezamos solucion inicial ------------------------------
-            for(int i  = 0; i < test; ++i) {
-                int semilla = random.nextInt();
-                for(int j = 0; j < 100; ++j) {
-                    BicingSolution solucionInicial = new BicingSolution(numeroEstaciones, numeroBicisTotal, numeroFurgonetas, tipoDemanda,
-                            semilla);
-                    //System.out.println("EMPEZAMOS LA GENERACION");
+            int k = 1;
+            for (int ki = 0; ki < 5; ++ki) {
+                if(ki == 1) k = 5;
+                if(ki == 2) k = 10;
+                if(ki == 3) k = 25;
+                if(ki == 4) k = 125;
+                String nombreFichero = "Experimento3_k_" + Integer.toString(k);
+                String pathname = "C:\\Users\\Fede\\Desktop\\code\\GitKraken\\BicingProject\\src\\main\\resources\\" + nombreFichero + ".csv";
+                File csvFile = new File(pathname);
+                FileWriter writer = new FileWriter(csvFile);
 
-                    //if (generadorSeleccionado == 0) {
-                        solucionInicial.generadorSolucion1();
+                CSVUtils.writeLine(writer, Arrays.asList("Iteracions", "Seed", "k", "Lambda", "Beneficis"));
+
+                double lambda = 10.0;
+                for(int li = 0; li < 5; ++li) {
+                    lambda /= 10.0;
+                    lambda = BigDecimal.valueOf(lambda).setScale(4, RoundingMode.HALF_UP).doubleValue();
+                    for (int i = 0; i < test; ++i) {
+                        int semilla = random.nextInt();
+                        for (int j = 0; j < 100; ++j) {
+                            BicingSolution solucionInicial = new BicingSolution(numeroEstaciones, numeroBicisTotal, numeroFurgonetas, tipoDemanda,
+                                    semilla);
+                            //System.out.println("EMPEZAMOS LA GENERACION");
+
+                            //if (generadorSeleccionado == 0) {
+                            solucionInicial.generadorSolucion1();
 //                    } else {
 //                        solucionInicial.generadorSolucion2();
 //                    }
-                    Bicing_Search(solucionInicial, algoritmoSeleccionado, heuristicoSeleccionado);
-
+                            int beneficios = Bicing_Search(solucionInicial, algoritmoSeleccionado, heuristicoSeleccionado, k, lambda);
+                            CSVUtils.writeLine(writer, Arrays.asList(Integer.toString(i+1), Integer.toString(semilla),
+                                    Integer.toString(k), Double.toString(lambda), Integer.toString(beneficios)));
+                        }
+                    }
                 }
+                writer.flush();
+                writer.close();
             }
-            //printCoords(solucionInicial);
-
-
-
-
-            for(int i = 0; i < test; ++i) {
-
-                CSVUtils.writeLine(writer, Arrays.asList(Integer.toString(i+1), Integer.toString(beneficiosIni[i]),
-                        Integer.toString(beneficios[i]), Long.toString(tiempo[i])));
-
-            }
-
-            writer.flush();
-            writer.close();
 
             mostrarMenu();
             end = scanner.nextInt();
@@ -108,7 +110,7 @@ public class BicingProblem {
         System.out.println("Introduce 0 para iniciar un nuevo problema Bicing o 1 para salir");
     }
 
-    private static int Bicing_Search(BicingSolution solution, int algoritmoSeleccionado, int heuristicoSeleccionado) {
+    private static int Bicing_Search(BicingSolution solution, int algoritmoSeleccionado, int heuristicoSeleccionado, int k, double lamb) {
         try {
             HeuristicFunction heuristicFunction;
             if (heuristicoSeleccionado == 0) {
@@ -124,7 +126,8 @@ public class BicingProblem {
                 search = new HillClimbingSearch();
             } else {
                 successorFunction = new BicingSuccessorFunction2();
-                search = new SimulatedAnnealingSearch(10000, 100, 5, 0.001);
+                //Antes: steps: 10000, stiter: 100, k: 5, lamb: 0.001
+                search = new SimulatedAnnealingSearch(10000, 100, k, lamb);
             }
 
             Problem problem = new Problem(solution, successorFunction, new BicingGoalTest(), heuristicFunction);
