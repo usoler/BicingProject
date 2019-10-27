@@ -22,9 +22,9 @@ public class BicingSolution {
     private int[] segundasBicisDejadas;         // i->id furgoneta, [i]->número de bicis dejadas [Memoria O(|F|)]
 
     private double costeTransporte;             // Coste por transporte al final de la hora
-    //    private int beneficios;                     // Beneficios en euros obtenidos al final de la hora (se le restan los costes por fallo)
     private int beneficioPorAcierto;
     private int penalizacionPorFallo;
+    private double distanciaRecorrida;
 
     // ------------------------------------------------------------------------
     // Constructores
@@ -44,10 +44,10 @@ public class BicingSolution {
 
         initArraysWith(numFurgonetas);
 
-//        this.beneficios = 0;
         this.beneficioPorAcierto = 0;
         this.penalizacionPorFallo = 0;
         this.costeTransporte = 0.0;
+        this.distanciaRecorrida = 0.0;
     }
 
     /**
@@ -63,10 +63,10 @@ public class BicingSolution {
         initArraysWith(numFurgonetas);
         copyArraysFrom(solution);
 
-//        this.beneficios = solution.getBeneficios();
         this.beneficioPorAcierto = solution.getBeneficioPorAcierto();
         this.penalizacionPorFallo = solution.getPenalizacionPorFallo();
         this.costeTransporte = solution.getCosteTransporte();
+        this.distanciaRecorrida = solution.getDistanciaRecorrida();
     }
 
     // ------------------------------------------------------------------------
@@ -218,7 +218,7 @@ public class BicingSolution {
             else if (destinoUnoODos == 1) this.segundosDestinos[idFurgoneta] = idEstacionDestinoFinal;
             else //System.out.println("Error al pasar el destino Uno o Dos");
 
-            calcularCosteTransporte(idFurgoneta);
+                calcularCosteTransporte(idFurgoneta);
             obtenerBeneficiosPorAciertos(idFurgoneta, destinoUnoODos);
             return true;
         }
@@ -465,9 +465,10 @@ public class BicingSolution {
         return this.segundasBicisDejadas;
     }
 
-    //    public int getBeneficios() {
-//        return this.beneficios;
-//    }
+    public double getDistanciaRecorrida() {
+        return this.distanciaRecorrida;
+    }
+
     public int getBeneficioPorAcierto() {
         return this.beneficioPorAcierto;
     }
@@ -619,7 +620,7 @@ public class BicingSolution {
 
     private int[] asignarCargaDestinosConDeficit(int idFurgoneta, int[] numBicisFaltantes, int index) {
         //System.out.println(String.format("Asignando carga destino1 a furgoenta con id '%s', a estacion " +
-                //"con num bicis faltantes '%s' (index = %s)", idFurgoneta, numBicisFaltantes[index], index));
+        //"con num bicis faltantes '%s' (index = %s)", idFurgoneta, numBicisFaltantes[index], index));
         int demandaOrigen = this.estaciones.get(this.asignaciones[idFurgoneta]).getDemanda();
         int bicisDisponiblesOrigen = this.estaciones.get(this.asignaciones[idFurgoneta]).getNumBicicletasNext();
         int bicisNoUsadasOrigen = this.estaciones.get(this.asignaciones[idFurgoneta]).getNumBicicletasNoUsadas();
@@ -643,31 +644,31 @@ public class BicingSolution {
             //System.out.println(String.format("Faltan menos de 30 bicis (%s faltantes)", numBicisFaltantes[index]));
             if (bicisParaCargar >= numBicisFaltantes[index]) { // dejo en el destino las que hacen falta (puede que tenga para un segundo destino)
                 //System.out.println(String.format("Tengo '%s' bicis para cargar >= '%s' bicis faltantes",
-                        //bicisParaCargar, numBicisFaltantes[index]));
+                //bicisParaCargar, numBicisFaltantes[index]));
                 this.primerasBicisDejadas[idFurgoneta] = numBicisFaltantes[index];
                 bicisParaCargar -= numBicisFaltantes[index];
                 numBicisFaltantes[index] = 0;
                 //System.out.println(String.format("Dejamos en el primer destino '%s' bicis",
-                        //this.primerasBicisDejadas[idFurgoneta]));
+                //this.primerasBicisDejadas[idFurgoneta]));
                 //System.out.println(String.format("Bicis para cargar en un posible segundo destino = %s",
-                        //bicisParaCargar));
+                //bicisParaCargar));
                 //System.out.println(String.format("Bicis faltantes = %s", numBicisFaltantes[index]));
 
                 if ((bicisParaCargar > 0) && (this.segundosDestinos[idFurgoneta] != -1)) { // si tiene un segundo destino asignado => index+1 es posible
                     //System.out.println("Puede asignar bicis a un segundo destino");
                     if (bicisParaCargar >= numBicisFaltantes[index + 1]) {
                         //System.out.println(String.format("Bicis para cargar '%s' >= bicis faltantes '%s'",
-                                //bicisParaCargar, numBicisFaltantes[index + 1]));
+                        //bicisParaCargar, numBicisFaltantes[index + 1]));
                         this.segundasBicisDejadas[idFurgoneta] = numBicisFaltantes[index + 1];
                         bicisParaCargar -= numBicisFaltantes[index + 1];
                         numBicisFaltantes[index + 1] = 0;
                         //System.out.println(String.format("Dejamos en el segundo destino '%s' bicis",
-                                //this.segundasBicisDejadas[idFurgoneta]));
+                        //this.segundasBicisDejadas[idFurgoneta]));
                         //System.out.println(String.format("Bicis restantes no usadas = %s", bicisParaCargar));
                         //System.out.println(String.format("Bicis faltantes = %s", numBicisFaltantes[index + 1]));
                     } else {
                         //System.out.println(String.format("Bicis para cargar '%s' < bicis faltantes '%s'",
-                                //bicisParaCargar, numBicisFaltantes[index + 1]));
+                        //bicisParaCargar, numBicisFaltantes[index + 1]));
                         this.segundasBicisDejadas[idFurgoneta] = bicisParaCargar;
                         bicisParaCargar = 0;
                         numBicisFaltantes[index + 1] -= this.segundasBicisDejadas[idFurgoneta];
@@ -682,7 +683,7 @@ public class BicingSolution {
                 }
             } else { // dejo en el destino todas las que puedo cargar (no tendra segundo destino)
                 //System.out.println(String.format("Bicis para cargar '%s' < bicis faltantes '%s'",
-                        //bicisParaCargar, numBicisFaltantes[index]));
+                //bicisParaCargar, numBicisFaltantes[index]));
 
                 this.primerasBicisDejadas[idFurgoneta] = bicisParaCargar;
                 bicisParaCargar = 0;
@@ -690,13 +691,13 @@ public class BicingSolution {
                 this.segundosDestinos[idFurgoneta] = -1;
 
                 //System.out.println(String.format("Dejamos en el primer destino '%s' bicis",
-                        //this.primerasBicisDejadas[idFurgoneta]));
+                //this.primerasBicisDejadas[idFurgoneta]));
                 //System.out.println(String.format("Bicis restantes para cargar = %s", bicisParaCargar));
                 //System.out.println(String.format("Bicis faltantes = %s", numBicisFaltantes[index]));
             }
         } else { // dejo en el destino todas las que puedo cargar (no tendra segundo destino)
             //System.out.println(String.format("Tengo mas de 30 bicis faltantes ('%s' faltantes)",
-                    //numBicisFaltantes[index]));
+            //numBicisFaltantes[index]));
 
             this.primerasBicisDejadas[idFurgoneta] = bicisParaCargar;
             bicisParaCargar = 0;
@@ -704,7 +705,7 @@ public class BicingSolution {
             this.segundosDestinos[idFurgoneta] = -1;
 
             //System.out.println(String.format("Dejamos en el primer destino '%s' bicis",
-                    //this.primerasBicisDejadas[idFurgoneta]));
+            //this.primerasBicisDejadas[idFurgoneta]));
             //System.out.println(String.format("Bicis para cargar restantes = %s", bicisParaCargar));
             //System.out.println(String.format("Bicis faltantes = %s", numBicisFaltantes[index]));
         }
@@ -746,7 +747,7 @@ public class BicingSolution {
             //System.out.println(String.format("Penalizacion por fallos (cargaFurgoneta - maxBicisSinPen): '%s'", (cargaFurgoneta - maxBicisSinPen)));
             this.penalizacionPorFallo += (cargaFurgoneta - maxBicisSinPen);
         } //else {
-            //System.out.println("No hay ninguna penalizacion por fallos");
+        //System.out.println("No hay ninguna penalizacion por fallos");
         //}
 
         this.realBicisNext[this.asignaciones[idFurgoneta]] -= cargaFurgoneta;
@@ -792,7 +793,7 @@ public class BicingSolution {
                 //System.out.println(String.format("Beneficio a acumular (cargaADejar): '%s'", cargaADejar));
             }
         } //else {
-            //System.out.println("No hay beneficios posibles");
+        //System.out.println("No hay beneficios posibles");
         //}
 
         this.realBicisNext[estacionID] += cargaADejar;
@@ -891,6 +892,7 @@ public class BicingSolution {
                 //System.out.println(String.format("ky = '%s'", ky));
 
                 distanciaEnMetros = Math.abs(jx - kx) + Math.abs(jy - ky);
+                this.distanciaRecorrida += distanciaEnMetros;
                 //System.out.println(String.format("Distancia(metros) = '%s'", distanciaEnMetros));
 
                 cargaTotalBicis -= this.primerasBicisDejadas[idFurgoneta];
@@ -962,6 +964,7 @@ public class BicingSolution {
             //System.out.println(String.format("jy = '%s'", jy));
 
             double distanciaEnMetros = Math.abs(ix - jx) + Math.abs(iy - jy);
+            this.distanciaRecorrida -= distanciaEnMetros;
             //System.out.println(String.format("Distancia(metros) = '%s'", distanciaEnMetros));
 
             int cargaTotalBicis = this.primerasBicisDejadas[idFurgoneta];
@@ -986,6 +989,7 @@ public class BicingSolution {
                 //System.out.println(String.format("ky = '%s'", ky));
 
                 distanciaEnMetros = Math.abs(jx - kx) + Math.abs(jy - ky);
+                this.distanciaRecorrida -= distanciaEnMetros;
                 //System.out.println(String.format("Distancia(metros) = '%s'", distanciaEnMetros));
 
                 cargaTotalBicis -= this.primerasBicisDejadas[idFurgoneta];
