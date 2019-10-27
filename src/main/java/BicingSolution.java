@@ -216,9 +216,9 @@ public class BicingSolution {
 
             if (destinoUnoODos == 0) this.primerosDestinos[idFurgoneta] = idEstacionDestinoFinal;
             else if (destinoUnoODos == 1) this.segundosDestinos[idFurgoneta] = idEstacionDestinoFinal;
-            else //System.out.println("Error al pasar el destino Uno o Dos");
+//            else //System.out.println("Error al pasar el destino Uno o Dos");
 
-                calcularCosteTransporte(idFurgoneta);
+            calcularCosteTransporte(idFurgoneta);
             obtenerBeneficiosPorAciertos(idFurgoneta, destinoUnoODos);
             return true;
         }
@@ -868,6 +868,7 @@ public class BicingSolution {
             //System.out.println(String.format("jy = '%s'", jy));
 
             double distanciaEnMetros = Math.abs(ix - jx) + Math.abs(iy - jy);
+            this.distanciaRecorrida += distanciaEnMetros;
             //System.out.println(String.format("Distancia(metros) = '%s'", distanciaEnMetros));
 
             int cargaTotalBicis = this.primerasBicisDejadas[idFurgoneta];
