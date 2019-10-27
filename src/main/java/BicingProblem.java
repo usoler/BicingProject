@@ -69,7 +69,7 @@ public class BicingProblem {
 
                     //beneficiosInij += (solucionInicial.getBeneficioPorAcierto() - solucionInicial.getPenalizacionPorFallo());
                     //beneficiosj += Bicing_Search(solucionInicial, algoritmoSeleccionado, heuristicoSeleccionado);
-                    Bicing_Search(solucionInicial, 1, 0); // HillClimbing & Heuristico1
+                    Bicing_Search(solucionInicial, 0, 0); // HillClimbing & Heuristico1
 
                     long endTime = System.currentTimeMillis();
                     //tiempoj += (endTime - startTime);
