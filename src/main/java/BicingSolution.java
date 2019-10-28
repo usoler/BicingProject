@@ -8,21 +8,17 @@ public class BicingSolution {
     private static final int NUM_MAX_BICIS_FURGONETA = 30;
 
     private static Estaciones estaciones;       // ArrayList de objetos tipo Estacion del problema
-
+    private static boolean estaUsandoConjuntoOperadoresOptimo;
     // ------------------------------------------------------------------------
-    // Representación de la solución | Coste en memoria: O(4*|F|)
+    // Representación de la solución | Coste en memoria
     // ------------------------------------------------------------------------
     private int[] asignaciones;                 // i->id furgoneta, [i]->id estacion [Memoria O(|F|)]
     private int[] realBicisNext;                // i->idEstacion,   [i]->Bicis que habrán en la siguiente hora [Memoria O(|E|)]
-
     private int[] primerosDestinos;             // i->id furgoneta, [i]->id estacion destino     [Memoria O(|F|)]
     private int[] segundosDestinos;             // i->id furgoneta, [i]->id estacion destino     [Memoria O(|F|)]
-
     private int[] primerasBicisDejadas;         // i->id furgoneta, [i]->número de bicis dejadas [Memoria O(|F|)]
     private int[] segundasBicisDejadas;         // i->id furgoneta, [i]->número de bicis dejadas [Memoria O(|F|)]
-
     private double costeTransporte;             // Coste por transporte al final de la hora
-    //    private int beneficios;                     // Beneficios en euros obtenidos al final de la hora (se le restan los costes por fallo)
     private int beneficioPorAcierto;
     private int penalizacionPorFallo;
 
@@ -44,10 +40,10 @@ public class BicingSolution {
 
         initArraysWith(numFurgonetas);
 
-//        this.beneficios = 0;
         this.beneficioPorAcierto = 0;
         this.penalizacionPorFallo = 0;
         this.costeTransporte = 0.0;
+        this.estaUsandoConjuntoOperadoresOptimo = false;
     }
 
     /**
@@ -63,10 +59,10 @@ public class BicingSolution {
         initArraysWith(numFurgonetas);
         copyArraysFrom(solution);
 
-//        this.beneficios = solution.getBeneficios();
         this.beneficioPorAcierto = solution.getBeneficioPorAcierto();
         this.penalizacionPorFallo = solution.getPenalizacionPorFallo();
         this.costeTransporte = solution.getCosteTransporte();
+        this.estaUsandoConjuntoOperadoresOptimo = solution.getEstaUsandoConjuntoOperadoresOptimo();
     }
 
     // ------------------------------------------------------------------------
@@ -270,7 +266,6 @@ public class BicingSolution {
                 this.segundasBicisDejadas[idFurgoneta1] = 0;
 
                 return (moverFurgoneta(idFurgoneta2, idEstacion1));
-
             }
         }
         return false;
@@ -433,7 +428,6 @@ public class BicingSolution {
         return true;
     }
 
-
     // ------------------------------------------------------------------------
     // Getters
     // ------------------------------------------------------------------------
@@ -465,9 +459,6 @@ public class BicingSolution {
         return this.segundasBicisDejadas;
     }
 
-    //    public int getBeneficios() {
-//        return this.beneficios;
-//    }
     public int getBeneficioPorAcierto() {
         return this.beneficioPorAcierto;
     }
@@ -478,6 +469,17 @@ public class BicingSolution {
 
     public double getCosteTransporte() {
         return this.costeTransporte;
+    }
+
+    public boolean getEstaUsandoConjuntoOperadoresOptimo() {
+        return this.estaUsandoConjuntoOperadoresOptimo;
+    }
+
+    // ------------------------------------------------------------------------
+    // Setters
+    // ------------------------------------------------------------------------
+    public void setEstaUsandoConjuntoOperadoresOptimo(boolean estaUsando) {
+        this.estaUsandoConjuntoOperadoresOptimo = estaUsando;
     }
 
     // ------------------------------------------------------------------------

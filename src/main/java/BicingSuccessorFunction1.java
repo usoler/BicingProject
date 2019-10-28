@@ -31,15 +31,17 @@ public class BicingSuccessorFunction1 implements SuccessorFunction {
                 }
             }
 
-            // Sucesores generados por el operador 'cambiarEstacionDestino'
-            for (int j = 0; j < numEstaciones; ++j) { // O(|E|)
-                for (int k = 0; k < NUM_MAX_DESTINOS; ++k) {
-                    ++contadorEspacio;
-                    BicingSolution nuevaSolution = new BicingSolution(solution);
-                    if (nuevaSolution.cambiarEstacionDestino(i, k, j)) {
-                        String actionMessage = String.format("Furgoneta con id = '%s', y origen '%s', cambiado el destino '%s' " +
-                                "al destino con id = '%s'", i, nuevaSolution.getAsignaciones()[i], k + 1, j);
-                        successors.add(new Successor(actionMessage, nuevaSolution));
+            if (!solution.getEstaUsandoConjuntoOperadoresOptimo()) {
+                // Sucesores generados por el operador 'cambiarEstacionDestino'
+                for (int j = 0; j < numEstaciones; ++j) { // O(|E|)
+                    for (int k = 0; k < NUM_MAX_DESTINOS; ++k) {
+                        ++contadorEspacio;
+                        BicingSolution nuevaSolution = new BicingSolution(solution);
+                        if (nuevaSolution.cambiarEstacionDestino(i, k, j)) {
+                            String actionMessage = String.format("Furgoneta con id = '%s', y origen '%s', cambiado el destino '%s' " +
+                                    "al destino con id = '%s'", i, nuevaSolution.getAsignaciones()[i], k + 1, j);
+                            successors.add(new Successor(actionMessage, nuevaSolution));
+                        }
                     }
                 }
             }

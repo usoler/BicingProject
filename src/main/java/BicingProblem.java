@@ -7,24 +7,26 @@ import java.util.*;
 
 public class BicingProblem {
 
-    // TODO: añadir bucle y menú de opciones
-
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         mostrarMenu();
         int end = scanner.nextInt();
         while (end != 1) {
             Random random = new Random();
-            int semilla = random.nextInt();
 
             System.out.println("Introduce el número de estaciones, el número de bicis, el número de furgonetas y el tipo " +
                     "demanda (0: equilibrada o 1: punta):"); // Por defecto, la semilla es aleatoria
-            // TODO: añadir la seleccion de la semilla
 
             int numeroEstaciones = scanner.nextInt();
             int numeroBicisTotal = scanner.nextInt();
             int numeroFurgonetas = scanner.nextInt();
             TipoDemanda tipoDemanda = TipoDemanda.values()[scanner.nextInt()];
+
+            System.out.println("Introduce un valor para la semilla o 0 para obtener una aleatoriamente:");
+            int semilla = scanner.nextInt();
+            if (semilla == 0) {
+                semilla = random.nextInt();
+            }
 
             System.out.println("Introduce 0 para utilizar el algoritmo Hill Climbing o 1 para Simulated Annealing:");
             int algoritmoSeleccionado = scanner.nextInt();
@@ -32,7 +34,11 @@ public class BicingProblem {
             System.out.println("Introduce 0 para utilizar el primer generador de solución inicial o 1 para el segundo:");
             int generadorSeleccionado = scanner.nextInt();
 
-            // TODO: añadir la seleccion del conjunto de operadores
+            System.out.println("Introduce 0 para utilizar el conjunto de operadores optimo o 1 para usarlos todos:");
+            boolean esConjuntoOptimo = false;
+            if (scanner.nextInt() == 0) {
+                esConjuntoOptimo = true;
+            }
 
             System.out.println("Introduce 0 para utilizar el primer heurístico o 1 para el segundo:");
             int heuristicoSeleccionado = scanner.nextInt();
@@ -47,6 +53,10 @@ public class BicingProblem {
                 solucionInicial.generadorSolucion1();
             } else {
                 solucionInicial.generadorSolucion2();
+            }
+
+            if (esConjuntoOptimo) {
+                solucionInicial.setEstaUsandoConjuntoOperadoresOptimo(true);
             }
 
             System.out.println("FINAL DE LA GENERACION");
@@ -98,20 +108,21 @@ public class BicingProblem {
                 search = new HillClimbingSearch();
             } else {
                 successorFunction = new BicingSuccessorFunction2();
-//                search = new SimulatedAnnealingSearch();
                 search = new SimulatedAnnealingSearch(10000, 100, 5, 0.001);
             }
 
             Problem problem = new Problem(solution, successorFunction, new BicingGoalTest(), heuristicFunction);
 
             long startTime = System.currentTimeMillis();
-            SearchAgent agent = new SearchAgent(problem, search); // TODO: ignorar System.out.println para calcular el tiempo correctamente
+            SearchAgent agent = new SearchAgent(problem, search); // TODO: ignorar todos los System.out.println del proyecto para calcular el tiempo correctamente
             long endTime = System.currentTimeMillis();
 
             System.out.println(String.format("Time = '%s' ms", (endTime - startTime)));
 
-//            printActions(agent.getActions());
-            printInstrumentation(agent.getInstrumentation());
+            if (algoritmoSeleccionado == 0) {
+                printActions(agent.getActions());
+                printInstrumentation(agent.getInstrumentation());
+            }
             System.out.print(((BicingSolution) search.getGoalState()).toString());
             BicingSolution goalSolution = ((BicingSolution) search.getGoalState());
             System.out.println(String.format("FINAL: BENEFICIOS - COSTE POR FALLOS: '%s'", goalSolution.getBeneficioPorAcierto() - goalSolution.getPenalizacionPorFallo()));

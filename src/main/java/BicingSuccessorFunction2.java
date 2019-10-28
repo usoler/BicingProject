@@ -19,7 +19,12 @@ public class BicingSuccessorFunction2 implements SuccessorFunction {
 
         int contador = 10; // Para salir de un bucle despues de 1000 iteraciones
 
-        int operadorRandom = generatorRandom.nextInt(NUM_OF_OPERATORS);
+        int operadorRandom;
+        if (solution.getEstaUsandoConjuntoOperadoresOptimo()) {
+            operadorRandom = generatorRandom.nextInt(NUM_OF_OPERATORS - 1);
+        } else {
+            operadorRandom = generatorRandom.nextInt(NUM_OF_OPERATORS);
+        }
 
         int idFurgonetaRandom;
         int idEstacionRandom;
@@ -40,25 +45,8 @@ public class BicingSuccessorFunction2 implements SuccessorFunction {
                         idFurgonetaRandom, idEstacionRandom);
                 successorRandom.add(new Successor(actionMessage, nuevaSolution));
                 break;
-            case 1: // cambiarEstacionDestino
-                idFurgonetaRandom = generatorRandom.nextInt(solution.getAsignaciones().length);
-                idEstacionRandom = generatorRandom.nextInt(solution.getEstaciones().size());
-                int destinoUnoODos = generatorRandom.nextInt(NUM_MAX_DESTINOS);
 
-                while ((contador > 0) && (!nuevaSolution.cambiarEstacionDestino(idFurgonetaRandom, destinoUnoODos, idEstacionRandom))) {
-                    nuevaSolution = new BicingSolution(solution);
-                    idFurgonetaRandom = generatorRandom.nextInt(solution.getAsignaciones().length);
-                    idEstacionRandom = generatorRandom.nextInt(solution.getEstaciones().size());
-                    destinoUnoODos = generatorRandom.nextInt(NUM_MAX_DESTINOS);
-                    --contador;
-                }
-
-                actionMessage = String.format("Furgoneta con id = '%s', y origen '%s', cambiado el destino '%s' " +
-                                "al destino con id = '%s'", idFurgonetaRandom,
-                        nuevaSolution.getAsignaciones()[idFurgonetaRandom], destinoUnoODos + 1, idEstacionRandom);
-                successorRandom.add(new Successor(actionMessage, nuevaSolution));
-                break;
-            case 2: // intercambiarFurgonetas
+            case 1: // intercambiarFurgonetas
                 idFurgonetaRandom = generatorRandom.nextInt(solution.getAsignaciones().length);
                 int idFurgonetaAIntercambiarRandom = generatorRandom.nextInt(solution.getAsignaciones().length);
 
@@ -73,7 +61,8 @@ public class BicingSuccessorFunction2 implements SuccessorFunction {
                         "con id = '%s'", idFurgonetaRandom, idFurgonetaAIntercambiarRandom);
                 successorRandom.add(new Successor(actionMessage, nuevaSolution));
                 break;
-            case 3: // cargarFurgoneta
+
+            case 2: // cargarFurgoneta
                 idFurgonetaRandom = generatorRandom.nextInt(solution.getAsignaciones().length);
                 int numPrimerasBicisRandom = generatorRandom.nextInt(NUM_MAX_BICIS);
                 int numSegundasBicisRandom = generatorRandom.nextInt(NUM_MAX_BICIS);
@@ -94,6 +83,25 @@ public class BicingSuccessorFunction2 implements SuccessorFunction {
                 actionMessage = String.format("Furgoneta con id = '%s' cargada con '%s' bicis " +
                                 "para el destino1 y '%s' para el destino2",
                         idFurgonetaRandom, numPrimerasBicisRandom, numSegundasBicisRandom);
+                successorRandom.add(new Successor(actionMessage, nuevaSolution));
+                break;
+
+            case 3: // cambiarEstacionDestino
+                idFurgonetaRandom = generatorRandom.nextInt(solution.getAsignaciones().length);
+                idEstacionRandom = generatorRandom.nextInt(solution.getEstaciones().size());
+                int destinoUnoODos = generatorRandom.nextInt(NUM_MAX_DESTINOS);
+
+                while ((contador > 0) && (!nuevaSolution.cambiarEstacionDestino(idFurgonetaRandom, destinoUnoODos, idEstacionRandom))) {
+                    nuevaSolution = new BicingSolution(solution);
+                    idFurgonetaRandom = generatorRandom.nextInt(solution.getAsignaciones().length);
+                    idEstacionRandom = generatorRandom.nextInt(solution.getEstaciones().size());
+                    destinoUnoODos = generatorRandom.nextInt(NUM_MAX_DESTINOS);
+                    --contador;
+                }
+
+                actionMessage = String.format("Furgoneta con id = '%s', y origen '%s', cambiado el destino '%s' " +
+                                "al destino con id = '%s'", idFurgonetaRandom,
+                        nuevaSolution.getAsignaciones()[idFurgonetaRandom], destinoUnoODos + 1, idEstacionRandom);
                 successorRandom.add(new Successor(actionMessage, nuevaSolution));
                 break;
             default:
