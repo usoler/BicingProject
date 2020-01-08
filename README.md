@@ -1,6 +1,6 @@
 # Bicing Project
 ## AI: Local Search
-### Nota: 11
+### Score: 11
 ### Team members:
 - Federico Rubinstein Pérez
 - Roger González Herrera
